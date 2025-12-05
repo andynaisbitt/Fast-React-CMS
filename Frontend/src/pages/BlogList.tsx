@@ -71,8 +71,12 @@ export const BlogList: React.FC = () => {
         tag: selectedTag || undefined,
         search: searchQuery || undefined,
       });
-      setPosts(response.posts || response);
-      setTotalPosts(response.total || response.length);
+
+      // Handle both BlogPost[] and BlogPostListResponse
+      const posts = Array.isArray(response) ? response : (response.posts || []);
+      const total = Array.isArray(response) ? response.length : (response.total || 0);
+      setPosts(posts);
+      setTotalPosts(total);
     } catch (error) {
       console.error('Failed to load posts:', error);
       setPosts([]);

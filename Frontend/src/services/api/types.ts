@@ -353,6 +353,7 @@ export interface BlogPostFilters {
   page_size?: number;
   per_page?: number; // Alternative name for page_size
   search?: string;
+  category?: string; // Category slug or name
   category_id?: number;
   tag?: string;
   published?: boolean;
