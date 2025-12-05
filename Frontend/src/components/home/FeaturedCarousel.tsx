@@ -98,7 +98,7 @@ export const FeaturedCarousel: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl">
-      <div className="relative min-h-[600px] lg:h-[600px]">
+      <div className="relative lg:h-[600px]">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -111,9 +111,9 @@ export const FeaturedCarousel: React.FC = () => {
               x: { type: 'spring', stiffness: 300, damping: 30 },
               opacity: { duration: 0.2 },
             }}
-            className="absolute inset-0"
+            className="lg:absolute lg:inset-0"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 lg:h-full">
               {/* Image Side */}
               <div className="relative overflow-hidden min-h-[300px] lg:min-h-0">
                 {currentPost.featured_image ? (
@@ -129,7 +129,7 @@ export const FeaturedCarousel: React.FC = () => {
               </div>
 
               {/* Content Side */}
-              <div className="relative flex flex-col justify-center p-6 sm:p-8 md:p-12 lg:p-16">
+              <div className="relative flex flex-col justify-center p-6 sm:p-8 md:p-12 lg:p-16 z-10">
                 {/* Category Badge */}
                 {currentPost.categories && currentPost.categories[0] && (
                   <motion.div
@@ -194,10 +194,11 @@ export const FeaturedCarousel: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
+                  className="relative z-10"
                 >
                   <Link
                     to={`/blog/${currentPost.slug}`}
-                    className="group inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl touch-manipulation"
                   >
                     <span>Read Article</span>
                     <ArrowRight
