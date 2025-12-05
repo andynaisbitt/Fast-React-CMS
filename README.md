@@ -10,6 +10,21 @@
 
 ---
 
+## Screenshots
+
+> **Coming Soon!** We'll add screenshots showcasing:
+> - Admin Dashboard
+> - Blog Editor with Markdown Preview
+> - Theme Customization Panel
+> - Dynamic Page Builder
+> - Category & Tag Management
+> - Mobile Responsive Design
+> - Dark Mode Interface
+
+**Want to contribute screenshots?** Fork the repo, take screenshots, and submit a PR!
+
+---
+
 ## Features
 
 FastReactCMS combines the best of modern web development with a developer-first approach:
@@ -62,8 +77,9 @@ git clone https://github.com/andynaisbitt/Fast-React-CMS.git
 cd Fast-React-CMS
 ```
 
-#### 2. Automated PostgreSQL Setup (Recommended)
+#### 2. Install PostgreSQL
 
+**Automated Setup (Linux/macOS):**
 ```bash
 # One-command setup! This script will:
 # - Install PostgreSQL (if not installed)
@@ -74,7 +90,64 @@ chmod +x setup-postgres.sh
 ./setup-postgres.sh
 ```
 
-Or **Manual Setup:**
+**Manual PostgreSQL Setup:**
+
+**On Ubuntu/Debian:**
+```bash
+# Install PostgreSQL
+sudo apt update
+sudo apt install -y postgresql postgresql-contrib
+
+# Start PostgreSQL service
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Create database and user
+sudo -u postgres psql
+
+# In PostgreSQL prompt:
+CREATE DATABASE fastreactcms;
+CREATE USER fastreactcms_user WITH PASSWORD 'your_secure_password';
+GRANT ALL PRIVILEGES ON DATABASE fastreactcms TO fastreactcms_user;
+
+-- Connect to database
+\c fastreactcms
+GRANT ALL ON SCHEMA public TO fastreactcms_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO fastreactcms_user;
+
+-- Exit
+\q
+```
+
+**On macOS:**
+```bash
+# Install via Homebrew
+brew install postgresql@14
+brew services start postgresql@14
+
+# Create database
+createdb fastreactcms
+
+# Create user (use psql to set password)
+psql fastreactcms
+CREATE USER fastreactcms_user WITH PASSWORD 'your_secure_password';
+GRANT ALL PRIVILEGES ON DATABASE fastreactcms TO fastreactcms_user;
+\q
+```
+
+**On Windows:**
+1. Download PostgreSQL from https://www.postgresql.org/download/windows/
+2. Run installer and remember your postgres password
+3. Open SQL Shell (psql) and run:
+```sql
+CREATE DATABASE fastreactcms;
+CREATE USER fastreactcms_user WITH PASSWORD 'your_secure_password';
+GRANT ALL PRIVILEGES ON DATABASE fastreactcms TO fastreactcms_user;
+\c fastreactcms
+GRANT ALL ON SCHEMA public TO fastreactcms_user;
+```
+
+#### 3. Backend Setup
 
 ```bash
 cd Backend
@@ -91,9 +164,21 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Copy environment file
+# Create .env file
 cp .env.example .env
-# Edit .env with your database credentials and secret keys
+
+# Edit .env with your database credentials
+# DATABASE_URL=postgresql://fastreactcms_user:your_secure_password@localhost/fastreactcms
+nano .env  # or use any text editor
+
+# Generate secure secrets for production
+# SECRET_KEY (run this):
+openssl rand -hex 32
+
+# CSRF_SECRET_KEY (run this):
+openssl rand -hex 32
+
+# Add these to .env file
 
 # Run database migrations
 alembic upgrade head
@@ -112,7 +197,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8100
 Backend will be running at: `http://localhost:8100`
 API docs available at: `http://localhost:8100/docs`
 
-#### 3. Frontend Setup
+#### 4. Frontend Setup
 
 ```bash
 cd Frontend
@@ -130,7 +215,7 @@ npm run dev
 
 Frontend will be running at: `http://localhost:5173`
 
-#### 4. First Login
+#### 5. First Login
 
 - Navigate to `http://localhost:5173/admin`
 - Login with the admin credentials you created during `create_admin.py`
@@ -464,30 +549,46 @@ We take all security reports seriously and will respond promptly.
 
 ## Roadmap
 
-### v1.0 (Current)
-- Blog system with categories and tags
-- Dynamic page builder
-- Theme customization
-- SEO optimization
-- Admin panel
-- User authentication
-- Security hardening
+### ✅ v1.0 (Current - Production Ready)
+- ✅ Blog system with categories and tags
+- ✅ Dynamic page builder with modular blocks
+- ✅ Theme customization (colors, typography, navigation)
+- ✅ SEO optimization (meta tags, slugs, RSS feeds)
+- ✅ Admin panel with content management
+- ✅ User authentication (JWT + HTTP-only cookies)
+- ✅ Security hardening (CSRF, bcrypt, rate limiting)
+- ✅ Google Analytics & AdSense integration ready
+- ✅ Responsive design (mobile/tablet/desktop)
+- ✅ Dark mode support
+- ✅ Image upload and management
+- ✅ Markdown support for content
 
-### v1.1 (Planned)
+### 📋 Future Enhancements (Community Driven)
+FastReactCMS is designed as a **developer-friendly foundation** - not a bloated all-in-one solution.
+
+We intentionally keep the core lean so developers can:
+- Build custom features without fighting the framework
+- Add their own integrations and services
+- Extend the block system with custom components
+- Implement their own authentication providers
+- Create custom admin pages
+
+**Potential community additions:**
 - Comment system with moderation
-- Multi-language support (i18n)
-- Advanced media library
-- Content scheduling
-- Email notifications
-- Social media sharing
+- Advanced media library (image optimization, CDN)
+- Content scheduling (publish at specific dates)
+- Email notifications for new posts
+- Social media auto-posting
+- Multi-author support with roles
+- Newsletter subscription system
+- Search functionality (full-text PostgreSQL)
+- Content versioning and revisions
 
-### v2.0 (Future)
-- Multi-author support
-- Plugin system
-- Advanced analytics
-- E-commerce integration
-- Newsletter system
-- API webhooks
+**Not Planned:**
+- ❌ Multi-language/i18n (English only, fork if needed)
+- ❌ Plugin marketplace (developers extend directly)
+- ❌ E-commerce features (use dedicated solutions)
+- ❌ All-in-one bloat (we stay focused on core CMS)
 
 ---
 
