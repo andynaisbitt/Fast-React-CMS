@@ -1,201 +1,251 @@
-# BlogCMS V1 - Quick Start Guide
+# FastReactCMS - Quick Start Guide
 
-## 🚀 5-Minute Setup
+> Get FastReactCMS up and running in under 5 minutes!
 
-### 1. Frontend Setup (Already Running!)
-Your frontend is currently running at: **http://localhost:5174**
+---
+
+## Prerequisites
+
+✅ Python 3.10+
+✅ Node.js 18+
+✅ PostgreSQL 14+ (can be installed automatically)
+✅ Git
+
+---
+
+## 1. Clone Repository
 
 ```bash
-# If you need to restart:
-cd "C:\Gitlab Projects\BlogCMS\Frontend"
-npm run dev
+git clone https://github.com/andynaisbitt/Fast-React-CMS.git
+cd Fast-React-CMS
 ```
 
-### 2. Backend Setup
-```bash
-# Navigate to backend
-cd "C:\Gitlab Projects\BlogCMS\Backend"
+---
 
-# Activate virtual environment
+## 2. Automated Setup (Recommended)
+
+```bash
+# This script does EVERYTHING:
+# ✅ Installs PostgreSQL
+# ✅ Creates database and user
+# ✅ Generates secure passwords and secrets
+# ✅ Creates .env file
+# ✅ Runs migrations
+
+chmod +x setup-postgres.sh
+./setup-postgres.sh
+```
+
+**Script Output:**
+- Database credentials (saved to `Backend/.env`)
+- Auto-generated secure passwords
+- Ready-to-use configuration
+
+---
+
+## 3. Backend Setup
+
+```bash
+cd Backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate (Windows)
 venv\Scripts\activate
 
-# Start server (should use existing PostgreSQL from ITApp)
+# Activate (macOS/Linux)
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Seed initial data
+python scripts/create_admin.py
+python scripts/seed_categories.py
+python scripts/seed_navigation_theme.py
+python scripts/seed_pages.py
+
+# Start backend server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8100
 ```
 
-**Database:** Already configured to use `itapp_postgres` container on port 5432 → `blogcms_db`
-
-### 3. First Login
-1. Open: http://localhost:5174/login
-2. Login with admin credentials from `.env`:
-   - Email: `admin@blogcms.local`
-   - Password: `AdminBlogCMS2025!`
-
-### 4. Customize Homepage
-1. Navigate to: **Admin → Site Settings**
-2. Click **Homepage** tab
-3. Customize:
-   - **Hero Title:** Your blog name
-   - **Hero Subtitle:** Your tagline/description
-   - **Badge Text:** e.g., "Tech Blog", "Personal Blog", "Dev Notes"
-   - **Primary CTA:** "Read Articles", "Start Reading", etc.
-   - **Secondary CTA:** "About Me", "Contact", etc.
-   - **Stats:** Leave blank to hide, or add custom values
-4. Click **Save Settings**
-5. Refresh homepage to see changes!
-
-### 5. Create First Blog Post
-1. Go to: **Admin → Blog Posts**
-2. Click **"Create New Post"**
-3. Fill in:
-   - Title
-   - Content (supports markdown)
-   - Excerpt (for previews)
-   - Categories (create new if needed)
-   - Tags
-   - Featured image URL (optional)
-   - SEO fields (meta title, description)
-4. Toggle **"Published"** switch
-5. Click **"Save Post"**
+**Backend running at:** http://localhost:8100
+**API docs at:** http://localhost:8100/docs
 
 ---
 
-## 📋 Customization Checklist
+## 4. Frontend Setup
 
-### Must Customize Before Launch:
-- [ ] Homepage hero title
-- [ ] Homepage subtitle
-- [ ] Badge text
-- [ ] CTA button text
-- [ ] Site title (SEO tab)
-- [ ] Site tagline (SEO tab)
-- [ ] Meta description (SEO tab)
-- [ ] Site URL (SEO tab)
-- [ ] Contact email (Contact tab)
+```bash
+# Open NEW terminal window
+cd Frontend
 
-### Optional Customizations:
-- [ ] Stats section (show/hide)
-- [ ] Google Analytics ID (Analytics tab)
-- [ ] Social media links (Social tab)
-- [ ] Theme colors (coming in V1.2)
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+
+# Start development server
+npm run dev
+```
+
+**Frontend running at:** http://localhost:5173
 
 ---
 
-## 🎨 Example Customizations
+## 5. First Login
 
-### Personal Tech Blog
-```
-Hero Title: "Code & Coffee"
-Hero Subtitle: "Exploring modern web development, one espresso at a time"
-Badge Text: "Developer Blog"
-Primary CTA: "Read Articles"
-Secondary CTA: "About Me"
+1. Navigate to http://localhost:5173/admin
+2. Login with credentials from `create_admin.py` script
+3. Start creating content!
+
+**Default Credentials:**
+- Email: `admin@yourdomain.com` (or what you set in script)
+- Password: (set during admin creation)
+
+---
+
+## Common Commands
+
+### Backend
+
+```bash
+# Start server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8100
+
+# Run migrations
+alembic upgrade head
+
+# Create migration
+alembic revision --autogenerate -m "Description"
+
+# View logs
+tail -f Backend/logs/app.log  # (if logging enabled)
 ```
 
-### Business Blog
-```
-Hero Title: "Company Insights"
-Hero Subtitle: "Industry news, product updates, and expert analysis"
-Badge Text: "Official Blog"
-Primary CTA: "Latest Updates"
-Secondary CTA: "Contact Sales"
+### Frontend
+
+```bash
+# Development server
+npm run dev
+
+# Production build
+npm run build
+
+# Lint code
+npm run lint
+
+# Preview production build
+npm run preview
 ```
 
-### Portfolio Blog
-```
-Hero Title: "Creative Works"
-Hero Subtitle: "Design, code, and everything in between"
-Badge Text: "Portfolio"
-Primary CTA: "View Projects"
-Secondary CTA: "Hire Me"
+### Database
+
+```bash
+# Connect to database
+psql -h localhost -U fastreactcms_user -d fastreactcms
+
+# Backup database
+pg_dump -h localhost -U fastreactcms_user fastreactcms > backup.sql
+
+# Restore database
+psql -h localhost -U fastreactcms_user fastreactcms < backup.sql
 ```
 
 ---
 
-## 🔄 Forking for TheITapprentice
+## Troubleshooting
 
-### When you're ready to fork for ITApp:
+### Backend won't start
 
-1. **Clone BlogCMS to private repo:**
-   ```bash
-   cd "C:\Gitlab Projects"
-   cp -r BlogCMS ITApp-Private-Blog
-   cd ITApp-Private-Blog
-   git init
-   git remote add origin <your-private-repo-url>
-   git add .
-   git commit -m "Fork BlogCMS V1 for ITApprentice"
-   git push -u origin main
-   ```
+```bash
+# Check PostgreSQL is running
+sudo systemctl status postgresql
 
-2. **Customize for ITApprentice:**
-   - Hero Title: "The IT Apprentice Blog"
-   - Hero Subtitle: "IT training, career advice, and skill development"
-   - Badge Text: "Education Platform"
-   - Stats: Show actual ITApp stats
-   - Add ITApp branding/colors
+# Check database connection
+psql -h localhost -U fastreactcms_user -d fastreactcms
 
-3. **Database Migration:**
-   - Already using same PostgreSQL container
-   - Blog tables already exist in `blogcms_db`
-   - Can import posts from ITApp if needed
+# Check Python dependencies
+pip install -r requirements.txt
+```
 
----
+### Frontend won't start
 
-## 🚢 Deployment Options
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
 
-### Option 1: Vercel (Frontend) + Railway (Backend)
-- **Vercel:** Free tier, auto-deploy from Git
-- **Railway:** $5/month, includes PostgreSQL
-- **Total:** ~$5/month
+# Check .env file exists
+cat .env
 
-### Option 2: Google Cloud Platform
-- **Cloud Run:** Backend container
-- **Cloud Storage:** Frontend static files
-- **Cloud SQL:** PostgreSQL database
-- **Total:** ~$10-30/month (see `docs/DEPLOYMENT.md`)
+# Check API URL is correct
+echo $VITE_API_URL
+```
 
-### Option 3: DigitalOcean App Platform
-- **App:** $5/month
-- **Database:** $15/month
-- **Total:** ~$20/month
+### CORS errors
+
+1. Ensure backend is running on port 8100
+2. Check `CORS_ORIGINS` in Backend/.env includes `http://localhost:5173`
+3. Ensure you're using `localhost`, NOT `127.0.0.1`
+
+### Database connection errors
+
+1. PostgreSQL must be running
+2. Database credentials in `.env` must match PostgreSQL user/password
+3. Database must exist (`CREATE DATABASE fastreactcms;`)
 
 ---
 
-## 🧪 Testing Checklist
+## Next Steps
 
-Before deploying:
-- [ ] Test homepage with custom settings
-- [ ] Create sample blog post
-- [ ] Verify post displays correctly
-- [ ] Test category filtering
-- [ ] Test tag filtering
-- [ ] Test search functionality
-- [ ] Check mobile responsiveness
-- [ ] Verify dark mode works
-- [ ] Test admin panel on mobile
-- [ ] Clear cache and test fresh load
+### Create Your First Blog Post
+
+1. Go to http://localhost:5173/admin
+2. Click "Blog" in sidebar
+3. Click "Create Post"
+4. Fill in title, content, categories
+5. Toggle "Published" and save!
+
+### Customize Theme
+
+1. Go to `/admin/settings/site`
+2. Update site name, tagline, colors
+3. Changes apply instantly!
+
+### Build Custom Pages
+
+1. Go to `/admin/pages`
+2. Click "Create Page"
+3. Use block editor to add content
+4. Publish and view!
 
 ---
 
-## 📞 Need Help?
+## Production Deployment
 
-1. **Check console:** F12 in browser
-2. **Review logs:** Backend terminal output
-3. **Check settings:** `localStorage.getItem('blogcms_settings')`
-4. **Reset settings:** Site Settings → Reset to Defaults
-5. **Check docs:** `README.md` and `docs/` folder
+Ready to deploy? See [DEPLOYMENT.md](DEPLOYMENT.md) for:
+
+- Google Cloud VM setup
+- Domain & DNS configuration
+- NGINX + SSL setup
+- Cloudflare integration
+- Performance optimization
+- Monitoring & backups
 
 ---
 
-## ✅ You're Ready!
+## Need Help?
 
-Your BlogCMS V1 instance is configured and ready to use!
+- **Documentation**: [README.md](README.md) (comprehensive guide)
+- **API Docs**: http://localhost:8100/docs (interactive)
+- **Issues**: https://github.com/andynaisbitt/Fast-React-CMS/issues
+- **Discussions**: https://github.com/andynaisbitt/Fast-React-CMS/discussions
 
-**Current Status:**
-- ✅ Frontend running: http://localhost:5174
-- ⏳ Backend: Start with `uvicorn app.main:app --reload --host 0.0.0.0 --port 8100`
-- ⏳ Database: Using existing PostgreSQL from ITApp
-- ✅ Settings: Customize at `/admin/settings`
+---
 
-**Happy blogging! 🎉**
+**That's it!** You're ready to start building with FastReactCMS! 🚀
+
+For detailed documentation, see [README.md](README.md)

@@ -58,11 +58,23 @@ FastReactCMS combines the best of modern web development with a developer-first 
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/fastreactcms.git
-cd fastreactcms
+git clone https://github.com/andynaisbitt/Fast-React-CMS.git
+cd Fast-React-CMS
 ```
 
-#### 2. Backend Setup
+#### 2. Automated PostgreSQL Setup (Recommended)
+
+```bash
+# One-command setup! This script will:
+# - Install PostgreSQL (if not installed)
+# - Create database and user with secure password
+# - Generate .env file with all secrets
+# - Run database migrations
+chmod +x setup-postgres.sh
+./setup-postgres.sh
+```
+
+Or **Manual Setup:**
 
 ```bash
 cd Backend
@@ -290,6 +302,17 @@ See `Frontend/.env.example` for complete configuration options.
 ---
 
 ## Production Deployment
+
+> **📖 Complete Deployment Guide Available!**
+> See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive production deployment instructions including:
+> - Google Cloud VM setup
+> - Domain & DNS configuration (with/without Cloudflare)
+> - PostgreSQL installation and tuning
+> - NGINX reverse proxy with SSL
+> - Let's Encrypt SSL certificates
+> - CDN setup (Cloudflare/Google Cloud CDN)
+> - Monitoring and maintenance
+> - Performance optimization
 
 ### Before Deploying
 
@@ -523,8 +546,8 @@ FastReactCMS is built with amazing open-source technologies:
 
 - **Documentation**: Check this README and inline code documentation
 - **API Docs**: Interactive docs at `/docs` when running the backend
-- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/yourusername/fastreactcms/issues)
-- **Discussions**: Ask questions and share ideas on [GitHub Discussions](https://github.com/yourusername/fastreactcms/discussions)
+- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/andynaisbitt/Fast-React-CMS/issues)
+- **Discussions**: Ask questions and share ideas on [GitHub Discussions](https://github.com/andynaisbitt/Fast-React-CMS/discussions)
 
 ---
 
