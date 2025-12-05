@@ -73,7 +73,7 @@ def get_rss_feed(db: Session = Depends(get_db)):
 
     # Get latest 50 published posts
     posts = db.query(BlogPost).filter(
-        BlogPost.status == 'published'
+        BlogPost.published == True
     ).order_by(
         BlogPost.published_at.desc()
     ).limit(50).all()

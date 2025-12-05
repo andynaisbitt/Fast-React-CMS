@@ -75,7 +75,7 @@ def get_sitemap(db: Session = Depends(get_db)):
 
     # Get all published blog posts
     posts = db.query(BlogPost).filter(
-        BlogPost.status == 'published'
+        BlogPost.published == True
     ).order_by(
         BlogPost.published_at.desc()
     ).all()
