@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CheckCircle, Eye, ArrowLeft } from 'lucide-react';
+import { CheckCircle, Eye, ArrowLeft, Edit, ExternalLink } from 'lucide-react';
 import {
   adminBlogApi,
   adminCategoryApi,
@@ -830,18 +830,31 @@ export const BlogEditor: React.FC = () => {
             </div>
 
             <div className="space-y-3">
+              {/* Continue Editing - Primary Action */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                }}
+                className="w-full px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium flex items-center justify-center gap-2"
+              >
+                <Edit size={20} />
+                Continue Editing
+              </button>
+
+              {/* Preview in New Tab - Only if published */}
               {formData.slug && formData.published && (
                 <button
                   onClick={() => {
-                    setShowSuccessModal(false);
-                    navigate(`/blog/${formData.slug}`);
+                    window.open(`/blog/${formData.slug}`, '_blank');
                   }}
-                  className="w-full px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium flex items-center justify-center gap-2"
+                  className="w-full px-6 py-3 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition font-medium flex items-center justify-center gap-2"
                 >
-                  <Eye size={20} />
-                  View Post
+                  <ExternalLink size={20} />
+                  Preview in New Tab
                 </button>
               )}
+
+              {/* Back to Admin */}
               <button
                 onClick={() => {
                   setShowSuccessModal(false);
