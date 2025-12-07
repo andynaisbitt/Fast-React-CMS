@@ -78,10 +78,13 @@ def get_rss_feed(db: Session = Depends(get_db)):
     """Generate RSS feed for published blog posts"""
 
     # Get latest 50 published posts
+    # Use coalesce to handle null published_at values, falling back to created_at
+    from sqlalchemy import func
+
     posts = db.query(BlogPost).filter(
         BlogPost.published == True
     ).order_by(
-        BlogPost.published_at.desc()
+        func.coalesce(BlogPost.published_at, BlogPost.created_at).desc()
     ).limit(50).all()
 
     rss_content = generate_rss_feed(posts)
