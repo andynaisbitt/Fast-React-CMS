@@ -88,6 +88,7 @@ export const SiteSettings: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'analytics' | 'seo' | 'homepage' | 'social' | 'contact' | 'branding'>('homepage');
+  const [uploadingLogo, setUploadingLogo] = useState<'light' | 'dark' | null>(null);
 
   // Fetch settings from API on mount
   useEffect(() => {
@@ -162,6 +163,54 @@ export const SiteSettings: React.FC = () => {
 
   const handleChange = (field: keyof SiteSettings, value: string) => {
     setSettings({ ...settings, [field]: value });
+  };
+
+  const handleLogoUpload = async (file: File, logoType: 'light' | 'dark') => {
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file (JPEG, PNG, GIF, or WebP)');
+      return;
+    }
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('File size must be less than 10MB');
+      return;
+    }
+
+    try {
+      setUploadingLogo(logoType);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('alt_text', `Site logo (${logoType} mode)`);
+
+      const response = await fetch('/api/v1/admin/blog/media/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+
+      // Auto-populate the URL field
+      const field = logoType === 'light' ? 'logo_url' : 'logo_dark_url';
+      setSettings({ ...settings, [field]: data.url });
+
+      console.log(`✓ ${logoType} logo uploaded successfully: ${data.url}`);
+    } catch (err) {
+      console.error('Error uploading logo:', err);
+      setError(`Failed to upload ${logoType} logo. Please try again.`);
+    } finally {
+      setUploadingLogo(null);
+    }
   };
 
   const tabs = [
@@ -553,15 +602,44 @@ VITE_ADSENSE_CLIENT_ID=${settings.google_adsense_client_id || 'ca-pub-XXXXXXXXXX
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Logo URL (Light Mode)
                   </label>
-                  <input
-                    type="url"
-                    value={settings.logo_url}
-                    onChange={(e) => handleChange('logo_url', e.target.value)}
-                    placeholder="https://yourdomain.com/logo.png"
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={settings.logo_url}
+                      onChange={(e) => handleChange('logo_url', e.target.value)}
+                      placeholder="https://yourdomain.com/logo.png"
+                      className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <label className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleLogoUpload(file, 'light');
+                        }}
+                        disabled={uploadingLogo === 'light'}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => document.querySelector<HTMLInputElement>('input[type="file"]')?.click()}
+                        disabled={uploadingLogo === 'light'}
+                        className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        {uploadingLogo === 'light' ? (
+                          <span className="flex items-center gap-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            Uploading...
+                          </span>
+                        ) : (
+                          '📤 Upload'
+                        )}
+                      </button>
+                    </label>
+                  </div>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Logo displayed in light mode
+                    Logo displayed in light mode (paste URL or upload image)
                   </p>
                 </div>
 
@@ -569,15 +647,48 @@ VITE_ADSENSE_CLIENT_ID=${settings.google_adsense_client_id || 'ca-pub-XXXXXXXXXX
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Logo URL (Dark Mode)
                   </label>
-                  <input
-                    type="url"
-                    value={settings.logo_dark_url}
-                    onChange={(e) => handleChange('logo_dark_url', e.target.value)}
-                    placeholder="https://yourdomain.com/logo-dark.png"
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={settings.logo_dark_url}
+                      onChange={(e) => handleChange('logo_dark_url', e.target.value)}
+                      placeholder="https://yourdomain.com/logo-dark.png"
+                      className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <label className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleLogoUpload(file, 'dark');
+                        }}
+                        disabled={uploadingLogo === 'dark'}
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const input = (e.currentTarget.previousElementSibling as HTMLInputElement);
+                          input?.click();
+                        }}
+                        disabled={uploadingLogo === 'dark'}
+                        className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        {uploadingLogo === 'dark' ? (
+                          <span className="flex items-center gap-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            Uploading...
+                          </span>
+                        ) : (
+                          '📤 Upload'
+                        )}
+                      </button>
+                    </label>
+                  </div>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Optional - falls back to light mode logo if not set
+                    Optional - falls back to light mode logo if not set (paste URL or upload image)
                   </p>
                 </div>
 
