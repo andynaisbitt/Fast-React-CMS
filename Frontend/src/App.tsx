@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { useEffect } from 'react';
 import { AuthProvider } from './state/contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -7,6 +7,7 @@ import { AppRoutes } from './routes/routes';
 import { GoogleAnalytics, initGA } from './components/analytics/GoogleAnalytics';
 import { initAdSense } from './components/ads/GoogleAdSense';
 import { CookieConsent } from './components/CookieConsent';
+import { DynamicTitle } from './components/DynamicTitle';
 import './index.css';
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
       <BrowserRouter>
         <ThemeProvider>
           <AuthProvider>
+            <DynamicTitle />
             <GoogleAnalytics />
             <CookieConsent />
             <AppRoutes />

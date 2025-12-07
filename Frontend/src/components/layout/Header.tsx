@@ -9,11 +9,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../state/contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { navigationApi, MenuItem } from '../../services/api/navigation.api';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
   const { refreshTheme } = useTheme();
+  const { settings } = useSiteSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [headerItems, setHeaderItems] = useState<MenuItem[]>([]);
@@ -223,12 +225,26 @@ export const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-lg sm:text-xl">F</span>
-            </div>
-            <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
-              FastReactCMS
-            </span>
+            {settings.logo_url ? (
+              /* Image Logo */
+              <img
+                src={settings.logo_url}
+                alt={settings.siteTitle}
+                className="h-8 sm:h-10 w-auto"
+              />
+            ) : (
+              /* Text Logo */
+              <>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-lg sm:text-xl">
+                    {settings.siteTitle.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
+                  {settings.siteTitle}
+                </span>
+              </>
+            )}
           </Link>
 
           {/* Desktop Navigation */}
