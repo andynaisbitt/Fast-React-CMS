@@ -212,7 +212,20 @@ export const PageEditor: React.FC = () => {
                 rows={10}
                 placeholder="# Heading&#10;&#10;Your content here..."
               />
-              <p className="text-xs text-gray-500 mt-1">Supports Markdown formatting</p>
+              <details className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                <summary className="cursor-pointer hover:text-gray-900 dark:hover:text-gray-200 font-medium">
+                  📖 Markdown Formatting Guide
+                </summary>
+                <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 space-y-1">
+                  <p><code># Heading 1</code> - Large heading</p>
+                  <p><code>## Heading 2</code> - Medium heading</p>
+                  <p><code>**bold text**</code> - Bold text</p>
+                  <p><code>*italic text*</code> - Italic text</p>
+                  <p><code>[link text](url)</code> - Hyperlink</p>
+                  <p><code>- List item</code> - Bullet point</p>
+                  <p><code>1. Numbered item</code> - Numbered list</p>
+                </div>
+              </details>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -477,9 +490,24 @@ export const PageEditor: React.FC = () => {
                 rows={8}
                 placeholder='[{"label": "Users", "value": "10k", "suffix": "+"}]'
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Format: [&#123;"label": "Users", "value": "10k", "suffix": "+"&#125;]
-              </p>
+              <details className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                <summary className="cursor-pointer hover:text-gray-900 dark:hover:text-gray-200 font-medium">
+                  📖 Stats JSON Format Help
+                </summary>
+                <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                  <p className="font-semibold mb-1">Required fields:</p>
+                  <p className="mb-2"><code>label</code> - Stat name (e.g., "Users")</p>
+                  <p className="mb-2"><code>value</code> - Stat number (e.g., "10k")</p>
+                  <p className="font-semibold mb-1 mt-3">Optional fields:</p>
+                  <p className="mb-2"><code>suffix</code> - Symbol after number (e.g., "+")</p>
+                  <p className="font-semibold mt-3 mb-1">Example:</p>
+                  <pre className="bg-white dark:bg-gray-900 p-2 rounded text-xs overflow-x-auto">
+[
+  &#123;"label": "Users", "value": "10k", "suffix": "+"&#125;,
+  &#123;"label": "Countries", "value": "50", "suffix": ""&#125;
+]</pre>
+                </div>
+              </details>
             </div>
           </div>
         );
