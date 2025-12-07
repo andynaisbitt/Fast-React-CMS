@@ -24,6 +24,7 @@ from app.api.v1.endpoints.navigation.public import router as navigation_public_r
 from app.api.v1.endpoints.navigation.admin import router as navigation_admin_router
 from app.api.v1.endpoints.theme.public import router as theme_public_router
 from app.api.v1.endpoints.theme.admin import router as theme_admin_router
+from app.api.v1.endpoints.site_settings.admin import router as site_settings_admin_router
 
 # Create tables (for development only - use Alembic in production)
 if settings.ENVIRONMENT == "development":
@@ -63,8 +64,9 @@ app.include_router(navigation_public_router, prefix="/api/v1", tags=["Navigation
 app.include_router(navigation_admin_router, prefix="/api/v1", tags=["Navigation - Admin"])
 app.include_router(theme_public_router, prefix="/api/v1", tags=["Theme - Public"])
 app.include_router(theme_admin_router, prefix="/api/v1", tags=["Theme - Admin"])
-app.include_router(rss_router, tags=["RSS/Sitemap"])
-app.include_router(sitemap_router, tags=["RSS/Sitemap"])
+app.include_router(site_settings_admin_router, prefix="/api/v1", tags=["Site Settings - Admin"])
+app.include_router(rss_router, prefix="/api/v1", tags=["RSS/Sitemap"])
+app.include_router(sitemap_router, prefix="/api/v1", tags=["RSS/Sitemap"])
 
 @app.get("/health")
 async def health_check():

@@ -2,6 +2,7 @@
 /**
  * Site Settings Admin Panel
  * Configure Google Analytics, Google AdSense, SEO defaults, and site info
+ * Now connected to backend API!
  */
 
 import React, { useState, useEffect } from 'react';
@@ -10,100 +11,152 @@ import { useNavigate } from 'react-router-dom';
 
 interface SiteSettings {
   // Analytics & Ads
-  googleAnalyticsId: string;
-  googleAdsenseClientId: string;
+  google_analytics_id: string;
+  google_adsense_client_id: string;
 
   // SEO Defaults
-  siteTitle: string;
-  siteTagline: string;
-  metaDescription: string;
-  metaKeywords: string;
+  site_title: string;
+  site_tagline: string;
+  meta_description: string;
+  meta_keywords: string;
 
   // Homepage Hero
-  heroTitle: string;
-  heroSubtitle: string;
-  heroBadgeText: string;
-  heroCTAPrimary: string;
-  heroCTASecondary: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_badge_text: string;
+  hero_cta_primary: string;
+  hero_cta_secondary: string;
 
   // Homepage Stats (optional - empty string to hide)
-  statsArticles: string;
-  statsReaders: string;
-  statsFree: string;
+  stats_articles: string;
+  stats_readers: string;
+  stats_free: string;
 
   // Social Media
-  twitterHandle: string;
-  facebookUrl: string;
-  linkedinUrl: string;
-  githubUrl: string;
+  twitter_handle: string;
+  facebook_url: string;
+  linkedin_url: string;
+  github_url: string;
 
   // Contact
-  contactEmail: string;
-  supportEmail: string;
+  contact_email: string;
+  support_email: string;
 
   // Domain
-  siteUrl: string;
+  site_url: string;
+
+  // Logo
+  logo_url: string;
+  logo_dark_url: string;
 }
 
 const defaultSettings: SiteSettings = {
-  googleAnalyticsId: '',
-  googleAdsenseClientId: '',
-  siteTitle: 'FastReactCMS',
-  siteTagline: 'A modern, SEO-optimized blog platform',
-  metaDescription: 'Share your knowledge with the world using FastReactCMS - a modern blog platform built with React and FastAPI.',
-  metaKeywords: 'blog, cms, react, fastapi, seo, content management',
+  google_analytics_id: '',
+  google_adsense_client_id: '',
+  site_title: 'FastReactCMS',
+  site_tagline: 'A modern, SEO-optimized blog platform',
+  meta_description: 'Share your knowledge with the world using FastReactCMS - a modern blog platform built with React and FastAPI.',
+  meta_keywords: 'blog, cms, react, fastapi, seo, content management',
 
   // Homepage defaults
-  heroTitle: 'Share Your Story',
-  heroSubtitle: 'A modern blogging platform built for creators, writers, and developers who want full control.',
-  heroBadgeText: 'Open Source',
-  heroCTAPrimary: 'Explore Articles',
-  heroCTASecondary: 'Learn More',
+  hero_title: 'Share Your Story',
+  hero_subtitle: 'A modern blogging platform built for creators, writers, and developers who want full control.',
+  hero_badge_text: 'Open Source',
+  hero_cta_primary: 'Explore Articles',
+  hero_cta_secondary: 'Learn More',
 
   // Stats (empty to hide)
-  statsArticles: '',
-  statsReaders: '',
-  statsFree: '100% Free',
+  stats_articles: '',
+  stats_readers: '',
+  stats_free: '100% Free',
 
-  twitterHandle: '',
-  facebookUrl: '',
-  linkedinUrl: '',
-  githubUrl: '',
-  contactEmail: '',
-  supportEmail: '',
-  siteUrl: 'https://yourdomain.com',
+  twitter_handle: '',
+  facebook_url: '',
+  linkedin_url: '',
+  github_url: '',
+  contact_email: '',
+  support_email: '',
+  site_url: 'https://yourdomain.com',
+  logo_url: '',
+  logo_dark_url: '',
 };
 
 export const SiteSettings: React.FC = () => {
   const navigate = useNavigate();
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [saved, setSaved] = useState(false);
-  const [activeTab, setActiveTab] = useState<'analytics' | 'seo' | 'homepage' | 'social' | 'contact'>('homepage');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'analytics' | 'seo' | 'homepage' | 'social' | 'contact' | 'branding'>('homepage');
 
-  // Load settings from localStorage on mount
+  // Fetch settings from API on mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem('blogcms_settings');
-    if (savedSettings) {
-      setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
-    }
+    fetchSettings();
   }, []);
 
-  const handleSave = () => {
-    localStorage.setItem('blogcms_settings', JSON.stringify(settings));
-    setSaved(true);
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('/api/v1/admin/site-settings', {
+        credentials: 'include'
+      });
 
-    // Update environment variables (requires rebuild to take effect)
-    console.log('Settings saved! Update your .env file with:');
-    console.log(`VITE_GA_MEASUREMENT_ID=${settings.googleAnalyticsId}`);
-    console.log(`VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          // No settings yet, use defaults
+          setSettings(defaultSettings);
+        } else {
+          throw new Error('Failed to fetch settings');
+        }
+      } else {
+        const data = await response.json();
+        setSettings(data);
+      }
+    } catch (err) {
+      console.error('Error fetching settings:', err);
+      setError('Failed to load settings. Using defaults.');
+      setSettings(defaultSettings);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/v1/admin/site-settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(settings)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save settings');
+      }
+
+      const updatedSettings = await response.json();
+      setSettings(updatedSettings);
+      setSaved(true);
+
+      console.log('✓ Settings saved successfully to database!');
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error('Error saving settings:', err);
+      setError('Failed to save settings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
     if (confirm('Are you sure you want to reset all settings to defaults?')) {
       setSettings(defaultSettings);
-      localStorage.removeItem('blogcms_settings');
     }
   };
 
@@ -113,11 +166,23 @@ export const SiteSettings: React.FC = () => {
 
   const tabs = [
     { id: 'homepage', label: 'Homepage', icon: '🏠' },
-    { id: 'seo', label: 'SEO & Branding', icon: '🔍' },
+    { id: 'seo', label: 'SEO & Domain', icon: '🔍' },
+    { id: 'branding', label: 'Branding & Logo', icon: '🎨' },
     { id: 'analytics', label: 'Analytics & Ads', icon: '📊' },
     { id: 'social', label: 'Social Media', icon: '🌐' },
     { id: 'contact', label: 'Contact Info', icon: '📧' },
   ] as const;
+
+  if (loading && !settings.site_title) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
@@ -128,9 +193,22 @@ export const SiteSettings: React.FC = () => {
             Site Settings
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Configure your blog's analytics, SEO, and site information
+            Configure your blog's analytics, SEO, branding, and site information
           </p>
         </div>
+
+        {/* Error Banner */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+          >
+            <p className="text-red-800 dark:text-red-300 font-medium">
+              ⚠️ {error}
+            </p>
+          </motion.div>
+        )}
 
         {/* Save Success Banner */}
         {saved && (
@@ -140,10 +218,10 @@ export const SiteSettings: React.FC = () => {
             className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4"
           >
             <p className="text-green-800 dark:text-green-300 font-medium">
-              ✓ Settings saved successfully!
+              ✓ Settings saved successfully to database!
             </p>
             <p className="text-sm text-green-700 dark:text-green-400 mt-1">
-              Remember to update your .env file and rebuild for Analytics/AdSense changes to take effect.
+              Changes are live. RSS and Sitemap will use the new values immediately.
             </p>
           </motion.div>
         )}
@@ -151,12 +229,12 @@ export const SiteSettings: React.FC = () => {
         {/* Tabs */}
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden">
           <div className="border-b border-gray-200 dark:border-slate-700">
-            <div className="flex space-x-1 p-1">
+            <div className="flex space-x-1 p-1 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 px-4 py-3 text-sm font-medium rounded-lg transition ${
+                  className={`flex-shrink-0 px-4 py-3 text-sm font-medium rounded-lg transition ${
                     activeTab === tab.id
                       ? 'bg-blue-600 dark:bg-blue-700 text-white'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -193,8 +271,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.heroTitle}
-                    onChange={(e) => handleChange('heroTitle', e.target.value)}
+                    value={settings.hero_title}
+                    onChange={(e) => handleChange('hero_title', e.target.value)}
                     placeholder="Share Your Story"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -208,8 +286,8 @@ export const SiteSettings: React.FC = () => {
                     Hero Subtitle
                   </label>
                   <textarea
-                    value={settings.heroSubtitle}
-                    onChange={(e) => handleChange('heroSubtitle', e.target.value)}
+                    value={settings.hero_subtitle}
+                    onChange={(e) => handleChange('hero_subtitle', e.target.value)}
                     rows={2}
                     placeholder="A modern blogging platform..."
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -222,8 +300,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.heroBadgeText}
-                    onChange={(e) => handleChange('heroBadgeText', e.target.value)}
+                    value={settings.hero_badge_text}
+                    onChange={(e) => handleChange('hero_badge_text', e.target.value)}
                     placeholder="Open Source"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -239,8 +317,8 @@ export const SiteSettings: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={settings.heroCTAPrimary}
-                      onChange={(e) => handleChange('heroCTAPrimary', e.target.value)}
+                      value={settings.hero_cta_primary}
+                      onChange={(e) => handleChange('hero_cta_primary', e.target.value)}
                       placeholder="Explore Articles"
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -251,8 +329,8 @@ export const SiteSettings: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={settings.heroCTASecondary}
-                      onChange={(e) => handleChange('heroCTASecondary', e.target.value)}
+                      value={settings.hero_cta_secondary}
+                      onChange={(e) => handleChange('hero_cta_secondary', e.target.value)}
                       placeholder="Learn More"
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -274,8 +352,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.statsArticles}
-                        onChange={(e) => handleChange('statsArticles', e.target.value)}
+                        value={settings.stats_articles}
+                        onChange={(e) => handleChange('stats_articles', e.target.value)}
                         placeholder="50+"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -286,8 +364,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.statsReaders}
-                        onChange={(e) => handleChange('statsReaders', e.target.value)}
+                        value={settings.stats_readers}
+                        onChange={(e) => handleChange('stats_readers', e.target.value)}
                         placeholder="10K+"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -298,8 +376,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.statsFree}
-                        onChange={(e) => handleChange('statsFree', e.target.value)}
+                        value={settings.stats_free}
+                        onChange={(e) => handleChange('stats_free', e.target.value)}
                         placeholder="100% Free"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -322,8 +400,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.googleAnalyticsId}
-                    onChange={(e) => handleChange('googleAnalyticsId', e.target.value)}
+                    value={settings.google_analytics_id}
+                    onChange={(e) => handleChange('google_analytics_id', e.target.value)}
                     placeholder="G-XXXXXXXXXX"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -338,8 +416,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.googleAdsenseClientId}
-                    onChange={(e) => handleChange('googleAdsenseClientId', e.target.value)}
+                    value={settings.google_adsense_client_id}
+                    onChange={(e) => handleChange('google_adsense_client_id', e.target.value)}
                     placeholder="ca-pub-XXXXXXXXXXXXXXXX"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -356,8 +434,8 @@ export const SiteSettings: React.FC = () => {
                     After saving, add these to your <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">Frontend/.env</code> file:
                   </p>
                   <pre className="bg-white dark:bg-slate-800 p-3 rounded text-xs overflow-x-auto">
-{`VITE_GA_MEASUREMENT_ID=${settings.googleAnalyticsId || 'G-XXXXXXXXXX'}
-VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXXXXX'}`}
+{`VITE_GA_MEASUREMENT_ID=${settings.google_analytics_id || 'G-XXXXXXXXXX'}
+VITE_ADSENSE_CLIENT_ID=${settings.google_adsense_client_id || 'ca-pub-XXXXXXXXXXXXXXXX'}`}
                   </pre>
                   <p className="text-sm text-blue-800 dark:text-blue-400 mt-2">
                     Then rebuild: <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">npm run build</code>
@@ -366,23 +444,35 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
               </motion.div>
             )}
 
-            {/* SEO & Branding Tab */}
+            {/* SEO & Domain Tab */}
             {activeTab === 'seo' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="space-y-6"
               >
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+                  <h3 className="font-medium text-green-900 dark:text-green-300 mb-2">
+                    🔍 SEO & RSS Feed
+                  </h3>
+                  <p className="text-sm text-green-800 dark:text-green-400">
+                    These settings are used in your RSS feed, sitemap, and page metadata.
+                  </p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Site Title
                   </label>
                   <input
                     type="text"
-                    value={settings.siteTitle}
-                    onChange={(e) => handleChange('siteTitle', e.target.value)}
+                    value={settings.site_title}
+                    onChange={(e) => handleChange('site_title', e.target.value)}
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Used in RSS feed title and page titles
+                  </p>
                 </div>
 
                 <div>
@@ -391,36 +481,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="text"
-                    value={settings.siteTagline}
-                    onChange={(e) => handleChange('siteTagline', e.target.value)}
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Default Meta Description
-                  </label>
-                  <textarea
-                    value={settings.metaDescription}
-                    onChange={(e) => handleChange('metaDescription', e.target.value)}
-                    rows={3}
-                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Recommended: 150-160 characters
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Default Meta Keywords
-                  </label>
-                  <input
-                    type="text"
-                    value={settings.metaKeywords}
-                    onChange={(e) => handleChange('metaKeywords', e.target.value)}
-                    placeholder="keyword1, keyword2, keyword3"
+                    value={settings.site_tagline}
+                    onChange={(e) => handleChange('site_tagline', e.target.value)}
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -431,15 +493,115 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="url"
-                    value={settings.siteUrl}
-                    onChange={(e) => handleChange('siteUrl', e.target.value)}
+                    value={settings.site_url}
+                    onChange={(e) => handleChange('site_url', e.target.value)}
                     placeholder="https://yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Update sitemap and RSS feed URLs in <code className="bg-gray-100 dark:bg-slate-700 px-1 rounded">Backend/app/api/v1/endpoints/blog/public.py</code>
+                    Used in sitemap and RSS feed URLs
                   </p>
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Default Meta Description
+                  </label>
+                  <textarea
+                    value={settings.meta_description}
+                    onChange={(e) => handleChange('meta_description', e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Recommended: 150-160 characters. Used in RSS feed description.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Default Meta Keywords
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.meta_keywords}
+                    onChange={(e) => handleChange('meta_keywords', e.target.value)}
+                    placeholder="keyword1, keyword2, keyword3"
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {/* Branding & Logo Tab */}
+            {activeTab === 'branding' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-6"
+              >
+                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4 mb-6">
+                  <h3 className="font-medium text-purple-900 dark:text-purple-300 mb-2">
+                    🎨 Logo & Branding
+                  </h3>
+                  <p className="text-sm text-purple-800 dark:text-purple-400">
+                    Upload logos and customize your site's branding
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Logo URL (Light Mode)
+                  </label>
+                  <input
+                    type="url"
+                    value={settings.logo_url}
+                    onChange={(e) => handleChange('logo_url', e.target.value)}
+                    placeholder="https://yourdomain.com/logo.png"
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Logo displayed in light mode
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Logo URL (Dark Mode)
+                  </label>
+                  <input
+                    type="url"
+                    value={settings.logo_dark_url}
+                    onChange={(e) => handleChange('logo_dark_url', e.target.value)}
+                    placeholder="https://yourdomain.com/logo-dark.png"
+                    className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Optional - falls back to light mode logo if not set
+                  </p>
+                </div>
+
+                {(settings.logo_url || settings.logo_dark_url) && (
+                  <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      Logo Preview
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {settings.logo_url && (
+                        <div className="bg-white dark:bg-slate-700 p-4 rounded-lg border border-gray-200 dark:border-slate-600">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Light Mode</p>
+                          <img src={settings.logo_url} alt="Logo (Light)" className="max-h-16 mx-auto" />
+                        </div>
+                      )}
+                      {settings.logo_dark_url && (
+                        <div className="bg-slate-900 p-4 rounded-lg border border-slate-700">
+                          <p className="text-xs text-gray-400 mb-2">Dark Mode</p>
+                          <img src={settings.logo_dark_url} alt="Logo (Dark)" className="max-h-16 mx-auto" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -456,8 +618,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="text"
-                    value={settings.twitterHandle}
-                    onChange={(e) => handleChange('twitterHandle', e.target.value)}
+                    value={settings.twitter_handle}
+                    onChange={(e) => handleChange('twitter_handle', e.target.value)}
                     placeholder="@yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -469,8 +631,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="url"
-                    value={settings.facebookUrl}
-                    onChange={(e) => handleChange('facebookUrl', e.target.value)}
+                    value={settings.facebook_url}
+                    onChange={(e) => handleChange('facebook_url', e.target.value)}
                     placeholder="https://facebook.com/yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -482,8 +644,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="url"
-                    value={settings.linkedinUrl}
-                    onChange={(e) => handleChange('linkedinUrl', e.target.value)}
+                    value={settings.linkedin_url}
+                    onChange={(e) => handleChange('linkedin_url', e.target.value)}
                     placeholder="https://linkedin.com/company/yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -495,8 +657,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="url"
-                    value={settings.githubUrl}
-                    onChange={(e) => handleChange('githubUrl', e.target.value)}
+                    value={settings.github_url}
+                    onChange={(e) => handleChange('github_url', e.target.value)}
                     placeholder="https://github.com/yourusername"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -517,8 +679,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="email"
-                    value={settings.contactEmail}
-                    onChange={(e) => handleChange('contactEmail', e.target.value)}
+                    value={settings.contact_email}
+                    onChange={(e) => handleChange('contact_email', e.target.value)}
                     placeholder="contact@yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -530,8 +692,8 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
                   </label>
                   <input
                     type="email"
-                    value={settings.supportEmail}
-                    onChange={(e) => handleChange('supportEmail', e.target.value)}
+                    value={settings.support_email}
+                    onChange={(e) => handleChange('support_email', e.target.value)}
                     placeholder="support@yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -541,7 +703,7 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
           </div>
 
           {/* Action Buttons */}
-          <div className="border-t border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-800/50 flex justify-between">
+          <div className="border-t border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-800/50 flex justify-between items-center">
             <div className="flex gap-3">
               <button
                 onClick={() => navigate('/admin')}
@@ -558,9 +720,11 @@ VITE_ADSENSE_CLIENT_ID=${settings.googleAdsenseClientId || 'ca-pub-XXXXXXXXXXXXX
             </div>
             <button
               onClick={handleSave}
-              className="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium"
+              disabled={loading}
+              className="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              Save Settings
+              {loading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>}
+              {loading ? 'Saving...' : 'Save Settings'}
             </button>
           </div>
         </div>
