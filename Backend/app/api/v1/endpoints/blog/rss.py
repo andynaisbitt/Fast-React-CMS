@@ -6,7 +6,7 @@ from datetime import datetime
 from xml.etree.ElementTree import Element, SubElement, tostring
 from app.core.database import get_db
 from app.api.v1.services.blog.models import BlogPost
-from app.api.v1.services.theme.models import ThemeSettings
+from app.api.v1.services.site_settings.models import SiteSettings
 
 router = APIRouter()
 
@@ -79,10 +79,10 @@ def get_rss_feed(db: Session = Depends(get_db)):
     """Generate RSS feed for published blog posts"""
 
     # Get site settings
-    settings = db.query(ThemeSettings).filter(ThemeSettings.id == 1).first()
+    settings = db.query(SiteSettings).filter(SiteSettings.id == 1).first()
     site_url = settings.site_url if settings else "https://yourdomain.com"
-    site_name = settings.site_name if settings else "BlogCMS"
-    site_description = settings.site_description if settings else "Latest blog posts"
+    site_name = settings.site_title if settings else "BlogCMS"
+    site_description = settings.meta_description if settings else "Latest blog posts"
 
     # Get latest 50 published posts
     # Use coalesce to handle null published_at values, falling back to created_at

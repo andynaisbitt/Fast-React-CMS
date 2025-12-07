@@ -7,7 +7,7 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from app.core.database import get_db
 from app.api.v1.services.blog.models import BlogPost
 from app.api.v1.services.pages.models import Page
-from app.api.v1.services.theme.models import ThemeSettings
+from app.api.v1.services.site_settings.models import SiteSettings
 
 router = APIRouter()
 
@@ -75,7 +75,7 @@ def get_sitemap(db: Session = Depends(get_db)):
     """Generate XML sitemap for all published content"""
 
     # Get site settings
-    settings = db.query(ThemeSettings).filter(ThemeSettings.id == 1).first()
+    settings = db.query(SiteSettings).filter(SiteSettings.id == 1).first()
     site_url = settings.site_url if settings else "https://yourdomain.com"
 
     # Get all published blog posts
