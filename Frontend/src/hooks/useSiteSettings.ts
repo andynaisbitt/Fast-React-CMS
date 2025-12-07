@@ -44,6 +44,10 @@ export interface SiteSettings {
 
   // Domain
   siteUrl: string;
+
+  // Logo
+  logoUrl: string;
+  logoDarkUrl: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -73,6 +77,8 @@ const defaultSettings: SiteSettings = {
   contactEmail: '',
   supportEmail: '',
   siteUrl: 'https://yourdomain.com',
+  logoUrl: '',
+  logoDarkUrl: '',
 };
 
 /**
@@ -101,6 +107,8 @@ const convertToCamelCase = (apiSettings: any): SiteSettings => {
     contactEmail: apiSettings.contact_email || '',
     supportEmail: apiSettings.support_email || '',
     siteUrl: apiSettings.site_url || defaultSettings.siteUrl,
+    logoUrl: apiSettings.logo_url || '',
+    logoDarkUrl: apiSettings.logo_dark_url || '',
   };
 };
 

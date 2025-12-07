@@ -225,10 +225,10 @@ export const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            {settings.logo_url ? (
+            {settings.logoUrl ? (
               /* Image Logo */
               <img
-                src={settings.logo_url}
+                src={settings.logoUrl}
                 alt={settings.siteTitle}
                 className="h-8 sm:h-10 w-auto"
               />
