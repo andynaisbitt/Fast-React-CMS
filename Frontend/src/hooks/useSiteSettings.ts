@@ -1,7 +1,10 @@
 // src/hooks/useSiteSettings.ts
 /**
- * Hook for accessing site-wide settings stored in localStorage
- * Settings can be configured in the admin panel at /admin/settings
+ * Hook for accessing site-wide settings from the API
+ * Settings can be configured in the admin panel at /admin/site-settings
+ *
+ * This hook fetches settings from the database and caches them in localStorage
+ * for offline access and performance.
  */
 
 import { useEffect, useState } from 'react';
@@ -72,6 +75,35 @@ const defaultSettings: SiteSettings = {
   siteUrl: 'https://yourdomain.com',
 };
 
+/**
+ * Convert snake_case field names from API to camelCase for frontend
+ */
+const convertToCamelCase = (apiSettings: any): SiteSettings => {
+  return {
+    googleAnalyticsId: apiSettings.google_analytics_id || '',
+    googleAdsenseClientId: apiSettings.google_adsense_client_id || '',
+    siteTitle: apiSettings.site_title || defaultSettings.siteTitle,
+    siteTagline: apiSettings.site_tagline || '',
+    metaDescription: apiSettings.meta_description || defaultSettings.metaDescription,
+    metaKeywords: apiSettings.meta_keywords || '',
+    heroTitle: apiSettings.hero_title || defaultSettings.heroTitle,
+    heroSubtitle: apiSettings.hero_subtitle || defaultSettings.heroSubtitle,
+    heroBadgeText: apiSettings.hero_badge_text || defaultSettings.heroBadgeText,
+    heroCTAPrimary: apiSettings.hero_cta_primary || defaultSettings.heroCTAPrimary,
+    heroCTASecondary: apiSettings.hero_cta_secondary || defaultSettings.heroCTASecondary,
+    statsArticles: apiSettings.stats_articles || '',
+    statsReaders: apiSettings.stats_readers || '',
+    statsFree: apiSettings.stats_free || defaultSettings.statsFree,
+    twitterHandle: apiSettings.twitter_handle || '',
+    facebookUrl: apiSettings.facebook_url || '',
+    linkedinUrl: apiSettings.linkedin_url || '',
+    githubUrl: apiSettings.github_url || '',
+    contactEmail: apiSettings.contact_email || '',
+    supportEmail: apiSettings.support_email || '',
+    siteUrl: apiSettings.site_url || defaultSettings.siteUrl,
+  };
+};
+
 export const useSiteSettings = () => {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,28 +112,54 @@ export const useSiteSettings = () => {
     loadSettings();
   }, []);
 
-  const loadSettings = () => {
+  const loadSettings = async () => {
     try {
-      const savedSettings = localStorage.getItem('blogcms_settings');
-      if (savedSettings) {
-        setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
+      // Try to fetch from API first
+      const response = await fetch('/api/v1/site-settings');
+
+      if (response.ok) {
+        const apiSettings = await response.json();
+        const camelCaseSettings = convertToCamelCase(apiSettings);
+
+        // Update state
+        setSettings(camelCaseSettings);
+
+        // Cache in localStorage for offline access
+        localStorage.setItem('blogcms_settings', JSON.stringify(camelCaseSettings));
+
+        console.log('✓ Site settings loaded from API');
+      } else {
+        throw new Error('API fetch failed');
       }
     } catch (error) {
-      console.error('Error loading site settings:', error);
+      console.warn('Failed to fetch site settings from API, using localStorage fallback:', error);
+
+      // Fallback to localStorage if API fails
+      try {
+        const savedSettings = localStorage.getItem('blogcms_settings');
+        if (savedSettings) {
+          setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
+        }
+      } catch (storageError) {
+        console.error('Error loading from localStorage:', storageError);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const saveSettings = (newSettings: Partial<SiteSettings>) => {
+    // Note: This function only updates localStorage cache
+    // To persist to database, use the admin panel at /admin/site-settings
     const updated = { ...settings, ...newSettings };
     localStorage.setItem('blogcms_settings', JSON.stringify(updated));
     setSettings(updated);
   };
 
   const resetSettings = () => {
+    // Clear cache and reload from API
     localStorage.removeItem('blogcms_settings');
-    setSettings(defaultSettings);
+    loadSettings();
   };
 
   return {
