@@ -117,8 +117,24 @@ const convertToCamelCase = (apiSettings: any): SiteSettings => {
   };
 };
 
+/**
+ * Get initial settings from localStorage immediately (before API call)
+ * This prevents flash of default content
+ */
+const getInitialSettings = (): SiteSettings => {
+  try {
+    const cached = localStorage.getItem('blogcms_settings');
+    if (cached) {
+      return { ...defaultSettings, ...JSON.parse(cached) };
+    }
+  } catch (error) {
+    console.warn('Failed to load cached settings:', error);
+  }
+  return defaultSettings;
+};
+
 export const useSiteSettings = () => {
-  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
+  const [settings, setSettings] = useState<SiteSettings>(getInitialSettings);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
