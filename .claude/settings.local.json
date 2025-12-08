@@ -22,7 +22,8 @@
       "Bash(powershell -Command:*)",
       "Bash(timeout /t 3)",
       "Bash(npm run build:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []
