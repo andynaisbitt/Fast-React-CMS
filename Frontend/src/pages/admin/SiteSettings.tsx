@@ -185,7 +185,7 @@ export const SiteSettings: React.FC = () => {
     }
   };
 
-  const handleChange = (field: keyof SiteSettings, value: string | boolean) => {
+  const handleChange = (field: keyof SiteSettings, value: string | boolean | number) => {
     setSettings({ ...settings, [field]: value });
   };
 
