@@ -184,114 +184,97 @@ export const Newsletter: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Total Subscribers</h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{subscribers.length}</p>
-          </div>
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Active</h3>
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{activeSubscribers.length}</p>
-          </div>
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-6">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Inactive</h3>
-            <p className="text-3xl font-bold text-gray-600 dark:text-gray-400">
-              {subscribers.length - activeSubscribers.length}
-            </p>
+        {/* Stats Cards - Compact for Mobile */}
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-4 mb-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{subscribers.length}</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">Total</p>
+            </div>
+            <div className="text-center border-l border-r border-gray-200 dark:border-slate-700">
+              <p className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400">{activeSubscribers.length}</p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">Active</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">
+                {subscribers.length - activeSubscribers.length}
+              </p>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">Inactive</p>
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="mb-6 flex gap-3">
+        <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => setShowSendModal(true)}
             disabled={activeSubscribers.length === 0}
-            className="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-none px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
-            📧 Send Newsletter
+            📧 Send
           </button>
           <button
             onClick={fetchSubscribers}
-            className="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition text-sm"
           >
-            🔄 Refresh
+            🔄
           </button>
           <button
             onClick={() => navigate('/admin/settings')}
-            className="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+            className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition text-sm"
           >
-            ⚙️ Email Settings
+            ⚙️
           </button>
         </div>
 
-        {/* Subscribers Table */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-slate-700">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Subscribed At
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
-                {subscribers.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                      No subscribers yet. The newsletter form will appear in the footer when enabled.
-                    </td>
-                  </tr>
-                ) : (
-                  subscribers.map((subscriber) => (
-                    <tr key={subscriber.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                        {subscriber.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                            subscriber.is_active
-                              ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
-                              : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300'
-                          }`}
-                        >
-                          {subscriber.is_active ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+        {/* Subscribers List - Mobile Friendly Cards */}
+        <div className="space-y-3">
+          {subscribers.length === 0 ? (
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-slate-700 p-12 text-center">
+              <p className="text-gray-500 dark:text-gray-400">
+                No subscribers yet. The newsletter form will appear in the footer when enabled.
+              </p>
+            </div>
+          ) : (
+            subscribers.map((subscriber) => (
+              <div
+                key={subscriber.id}
+                className="bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700 p-4 hover:shadow-md transition"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {subscriber.email}
+                    </p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                          subscriber.is_active
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300'
+                        }`}
+                      >
+                        {subscriber.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         {new Date(subscriber.subscribed_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
+                          day: 'numeric'
                         })}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                        <button
-                          onClick={() => handleDelete(subscriber.id, subscriber.email)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium"
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(subscriber.id, subscriber.email)}
+                    className="flex-shrink-0 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Back Button */}
