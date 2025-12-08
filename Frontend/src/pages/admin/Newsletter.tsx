@@ -44,10 +44,21 @@ export const Newsletter: React.FC = () => {
       }
 
       const data = await response.json();
-      setSubscribers(data);
+      console.log('Subscribers API response:', data);
+
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setSubscribers(data);
+      } else if (data && Array.isArray(data.subscribers)) {
+        setSubscribers(data.subscribers);
+      } else {
+        console.error('Unexpected data format:', data);
+        setSubscribers([]);
+      }
     } catch (err) {
       console.error('Error fetching subscribers:', err);
       setError('Failed to load subscribers. Please try again.');
+      setSubscribers([]);
     } finally {
       setLoading(false);
     }
@@ -118,7 +129,7 @@ export const Newsletter: React.FC = () => {
     }
   };
 
-  const activeSubscribers = subscribers.filter(s => s.is_active);
+  const activeSubscribers = Array.isArray(subscribers) ? subscribers.filter(s => s.is_active) : [];
 
   if (loading && subscribers.length === 0) {
     return (
