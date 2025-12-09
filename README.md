@@ -50,7 +50,7 @@ FastReactCMS combines the best of modern web development with a developer-first 
 - **Category & Tag System** - Organize content with unlimited categories and tags
 - **Draft System** - Save and publish content when ready
 - **Media Library** - Image upload and management
-- **Comment System** - Built-in commenting (optional per post)
+- **Newsletter System** - Email subscription and newsletter management (v1.3)
 
 ### Security & Performance
 - **HTTP-Only Cookies** - JWT tokens never exposed to JavaScript (XSS protection)
@@ -93,8 +93,8 @@ cd Fast-React-CMS
 # - Create database and user with secure password
 # - Generate .env file with all secrets
 # - Run database migrations
-chmod +x setup-postgres.sh
-./setup-postgres.sh
+chmod +x deployment/setup-postgres.sh
+./deployment/setup-postgres.sh
 ```
 
 **Manual PostgreSQL Setup:**
@@ -298,8 +298,16 @@ FastReactCMS/
 │   ├── .env.example          # Frontend environment template
 │   ├── package.json          # NPM dependencies
 │   └── vite.config.ts        # Vite configuration
+├── deployment/
+│   ├── nginx.conf            # NGINX configuration
+│   ├── setup-nginx.sh        # NGINX setup script
+│   └── setup-postgres.sh     # PostgreSQL setup script
+├── docs/
+│   ├── deployment/           # Deployment guides
+│   ├── releases/             # Release notes
+│   ├── features/             # Feature documentation
+│   └── development/          # Contributing & setup guides
 ├── .gitignore                # Git exclusions
-├── SECURITY_AUDIT_REPORT.md  # Security audit results
 └── README.md                 # This file
 ```
 
@@ -396,11 +404,11 @@ See `Frontend/.env.example` for complete configuration options.
 ## Production Deployment
 
 > **📖 Complete Deployment Guide Available!**
-> See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive production deployment instructions including:
+> See [docs/deployment/DEPLOYMENT.md](docs/deployment/DEPLOYMENT.md) for comprehensive production deployment instructions including:
 > - Google Cloud VM setup
 > - Domain & DNS configuration (with/without Cloudflare)
 > - PostgreSQL installation and tuning
-> - NGINX reverse proxy with SSL
+> - NGINX reverse proxy with SSL (config in `deployment/nginx.conf`)
 > - Let's Encrypt SSL certificates
 > - CDN setup (Cloudflare/Google Cloud CDN)
 > - Monitoring and maintenance
@@ -436,7 +444,7 @@ See `Frontend/.env.example` for complete configuration options.
 
 5. **Database Backups** - Configure automated backups
 
-See our [Security Audit Report](SECURITY_AUDIT_REPORT.md) for detailed security guidance.
+See our [Security Audit Report](docs/development/SECURITY_AUDIT_REPORT.md) for detailed security guidance.
 
 ### Deployment Options
 
@@ -506,7 +514,7 @@ See `/docs` for complete API reference.
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please see [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) for guidelines.
 
 ### Development Workflow
 
@@ -539,7 +547,7 @@ FastReactCMS takes security seriously. We've completed a comprehensive security 
 - Input Validation with Pydantic schemas
 - Auto Token Refresh System
 
-See our complete [Security Audit Report](SECURITY_AUDIT_REPORT.md) for details.
+See our complete [Security Audit Report](docs/development/SECURITY_AUDIT_REPORT.md) for details.
 
 ### Reporting Security Issues
 
@@ -556,11 +564,13 @@ We take all security reports seriously and will respond promptly.
 
 ## Roadmap
 
-### ✅ v1.0 (Current - Production Ready)
+### ✅ v1.3 (Current - December 2025)
+
+**Core Features:**
 - ✅ Blog system with categories and tags
 - ✅ Dynamic page builder with modular blocks
 - ✅ Theme customization (colors, typography, navigation)
-- ✅ SEO optimization (meta tags, slugs, RSS feeds)
+- ✅ SEO optimization (meta tags, slugs, RSS feeds, sitemap)
 - ✅ Admin panel with content management
 - ✅ User authentication (JWT + HTTP-only cookies)
 - ✅ Security hardening (CSRF, bcrypt, rate limiting)
@@ -569,6 +579,21 @@ We take all security reports seriously and will respond promptly.
 - ✅ Dark mode support
 - ✅ Image upload and management
 - ✅ Markdown support for content
+
+**Newsletter System (v1.3):**
+- ✅ Email newsletter subscription system
+- ✅ SMTP configuration (SendGrid/custom)
+- ✅ Subscriber management with search
+- ✅ Newsletter composer with HTML support
+- ✅ Public unsubscribe page
+- ✅ Mobile-optimized admin interface
+- ✅ Active/Inactive subscriber tracking
+
+**Recent Updates:**
+- v1.3 (Dec 2025): Newsletter system with complete subscriber management
+- v1.2 (Dec 2025): Mobile UX improvements across admin panel
+- v1.1 (Dec 2025): Production deployment fixes and optimizations
+- v1.0 (Nov 2025): Initial production release
 
 ### 📋 Future Enhancements (Community Driven)
 FastReactCMS is designed as a **developer-friendly foundation** - not a bloated all-in-one solution.
@@ -587,9 +612,10 @@ We intentionally keep the core lean so developers can:
 - Email notifications for new posts
 - Social media auto-posting
 - Multi-author support with roles
-- Newsletter subscription system
 - Search functionality (full-text PostgreSQL)
 - Content versioning and revisions
+- Newsletter templates and automation
+- A/B testing for newsletters
 
 **Not Planned:**
 - ❌ Multi-language/i18n (English only, fork if needed)
