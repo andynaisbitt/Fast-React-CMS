@@ -24,6 +24,7 @@ const Contact = lazy(() => import('../pages/Contact'));
 const DynamicPage = lazy(() => import('../pages/DynamicPage'));
 const PagesList = lazy(() => import('../pages/admin/PagesList'));
 const PageEditor = lazy(() => import('../pages/admin/PageEditor'));
+const Unsubscribe = lazy(() => import('../pages/Unsubscribe'));
 
 // Loading component
 const PageLoader = () => (
@@ -88,6 +89,16 @@ export const AppRoutes = () => {
           element={
             <Layout hideHeader hideFooter>
               <Login />
+            </Layout>
+          }
+        />
+
+        {/* Unsubscribe page (public, no header/footer) */}
+        <Route
+          path="/unsubscribe"
+          element={
+            <Layout hideHeader hideFooter>
+              <Unsubscribe />
             </Layout>
           }
         />
