@@ -363,6 +363,16 @@ async function handleSSR(req, res, baseHtml, siteSettings) {
   }
 }
 
+// Health check endpoint (must be defined BEFORE catch-all route!)
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    cache_size: pageCache.size,
+    cache_max: pageCache.max,
+    uptime: process.uptime(),
+  });
+});
+
 // Middleware: Serve static files from dist
 app.use(express.static(DIST_PATH, {
   // Don't serve index.html for static routes - we'll handle that
@@ -394,16 +404,6 @@ app.get(/^\/.*/, async (req, res) => {
   // Regular user - serve SPA
   console.log(`[SSR] Regular user, serving SPA: ${req.path}`);
   res.send(baseHtml);
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    cache_size: pageCache.size,
-    cache_max: pageCache.max,
-    uptime: process.uptime(),
-  });
 });
 
 // Start server
