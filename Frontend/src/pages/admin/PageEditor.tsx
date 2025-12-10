@@ -18,6 +18,7 @@ export const PageEditor: React.FC = () => {
     meta_title: '',
     meta_description: '',
     meta_keywords: '',
+    canonical_url: '',
     blocks: [],
     published: false,
   });
@@ -38,6 +39,7 @@ export const PageEditor: React.FC = () => {
         meta_title: page.meta_title || '',
         meta_description: page.meta_description || '',
         meta_keywords: page.meta_keywords || '',
+        canonical_url: page.canonical_url || '',
         blocks: page.blocks,
         published: page.published,
       });
@@ -623,6 +625,23 @@ export const PageEditor: React.FC = () => {
                 maxLength={160}
               />
               <p className="text-sm text-gray-500 mt-1">{formData.meta_description?.length || 0}/160 characters</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Canonical URL (Optional)
+              </label>
+              <input
+                type="url"
+                value={formData.canonical_url || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, canonical_url: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                placeholder="https://example.com/original-page"
+                maxLength={500}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Use this if this page is a duplicate or syndicated version of content originally published elsewhere.
+              </p>
             </div>
 
             <div className="flex items-center gap-2">

@@ -1,0 +1,66 @@
+# FastReactCMS SSR Server - Systemd Service Unit
+# Location: /etc/systemd/system/fastreactcms-ssr.service
+#
+# Installation:
+# 1. sudo cp fastreactcms-ssr.service /etc/systemd/system/
+# 2. sudo systemctl daemon-reload
+# 3. sudo systemctl enable fastreactcms-ssr
+# 4. sudo systemctl start fastreactcms-ssr
+#
+# Management:
+# - Start: sudo systemctl start fastreactcms-ssr
+# - Stop: sudo systemctl stop fastreactcms-ssr
+# - Restart: sudo systemctl restart fastreactcms-ssr
+# - Status: sudo systemctl status fastreactcms-ssr
+# - Logs: sudo journalctl -u fastreactcms-ssr -f
+
+[Unit]
+Description=FastReactCMS SSR Server - Crawler Detection and Meta Tag Injection
+Documentation=https://github.com/yourusername/fastreactcms
+After=network.target network-online.target
+Wants=network-online.target
+Requires=fastreactcms-backend.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/fastreactcms/ssr
+
+# Environment variables
+Environment="NODE_ENV=production"
+Environment="SSR_PORT=3001"
+Environment="API_BASE_URL=http://localhost:8100"
+Environment="SITE_URL=https://theitapprentice.com"
+
+# Alternative: use environment file
+# EnvironmentFile=/var/www/fastreactcms/ssr/.env
+
+# Start command
+ExecStart=/usr/bin/node server.js
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# Resource limits
+LimitNOFILE=65536
+MemoryLimit=512M
+
+# Logging
+StandardOutput=append:/var/log/fastreactcms-ssr.log
+StandardError=append:/var/log/fastreactcms-ssr-error.log
+SyslogIdentifier=fastreactcms-ssr
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log
+ReadOnlyPaths=/var/www/fastreactcms/Frontend/dist
+
+[Install]
+WantedBy=multi-user.target

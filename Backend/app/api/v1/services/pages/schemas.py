@@ -3,6 +3,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+import re
 
 
 class ContentBlock(BaseModel):
@@ -30,8 +31,19 @@ class PageBase(BaseModel):
     meta_title: Optional[str] = Field(None, max_length=60)
     meta_description: Optional[str] = Field(None, max_length=160)
     meta_keywords: Optional[str] = Field(None, max_length=255)
+    canonical_url: Optional[str] = Field(None, max_length=500)
     blocks: List[ContentBlock] = Field(default_factory=list)
     published: bool = False
+
+    @field_validator('canonical_url')
+    @classmethod
+    def validate_canonical_url(cls, v):
+        if v:
+            # Basic URL validation
+            url_pattern = r'^https?://.+$'
+            if not re.match(url_pattern, v):
+                raise ValueError('Canonical URL must be a valid HTTP/HTTPS URL')
+        return v
 
 
 class PageCreate(PageBase):
@@ -46,8 +58,19 @@ class PageUpdate(BaseModel):
     meta_title: Optional[str] = Field(None, max_length=60)
     meta_description: Optional[str] = Field(None, max_length=160)
     meta_keywords: Optional[str] = Field(None, max_length=255)
+    canonical_url: Optional[str] = Field(None, max_length=500)
     blocks: Optional[List[ContentBlock]] = None
     published: Optional[bool] = None
+
+    @field_validator('canonical_url')
+    @classmethod
+    def validate_canonical_url(cls, v):
+        if v:
+            # Basic URL validation
+            url_pattern = r'^https?://.+$'
+            if not re.match(url_pattern, v):
+                raise ValueError('Canonical URL must be a valid HTTP/HTTPS URL')
+        return v
 
 
 class PageResponse(PageBase):

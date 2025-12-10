@@ -13,6 +13,7 @@ export interface Page {
   meta_title?: string;
   meta_description?: string;
   meta_keywords?: string;
+  canonical_url?: string;
   blocks: ContentBlock[];
   published: boolean;
   created_at: string;
@@ -26,6 +27,7 @@ export interface PageCreate {
   meta_title?: string;
   meta_description?: string;
   meta_keywords?: string;
+  canonical_url?: string;
   blocks: ContentBlock[];
   published: boolean;
 }
@@ -36,6 +38,7 @@ export interface PageUpdate {
   meta_title?: string;
   meta_description?: string;
   meta_keywords?: string;
+  canonical_url?: string;
   blocks?: ContentBlock[];
   published?: boolean;
 }

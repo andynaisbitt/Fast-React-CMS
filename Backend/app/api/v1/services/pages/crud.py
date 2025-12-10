@@ -14,6 +14,11 @@ def get_page_by_slug(db: Session, slug: str, published_only: bool = True) -> Opt
     return query.first()
 
 
+def get_page_by_canonical_url(db: Session, canonical_url: str) -> Optional[Page]:
+    """Get page by canonical URL"""
+    return db.query(Page).filter(Page.canonical_url == canonical_url).first()
+
+
 def get_page_by_id(db: Session, page_id: int) -> Optional[Page]:
     """Get page by ID"""
     return db.query(Page).filter(Page.id == page_id).first()

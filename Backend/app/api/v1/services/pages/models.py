@@ -23,6 +23,7 @@ class Page(Base):
     meta_title = Column(String(60), nullable=True)
     meta_description = Column(String(160), nullable=True)
     meta_keywords = Column(String(255), nullable=True)
+    canonical_url = Column(String(500), nullable=True)  # For duplicate content SEO
 
     # Content blocks (JSON array)
     # Format: [{"type": "hero", "data": {...}}, {"type": "text", "data": {...}}]

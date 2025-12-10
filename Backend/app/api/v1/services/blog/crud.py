@@ -225,6 +225,14 @@ def get_post_by_slug(db: Session, slug: str) -> Optional[BlogPost]:
     ).filter(BlogPost.slug == slug).first()
 
 
+def get_post_by_canonical_url(db: Session, canonical_url: str) -> Optional[BlogPost]:
+    """Get post by canonical URL with tags and categories"""
+    return db.query(BlogPost).options(
+        joinedload(BlogPost.tags),
+        joinedload(BlogPost.categories)
+    ).filter(BlogPost.canonical_url == canonical_url).first()
+
+
 def get_posts(
     db: Session,
     skip: int = 0,

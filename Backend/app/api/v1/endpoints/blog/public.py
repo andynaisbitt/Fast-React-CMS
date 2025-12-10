@@ -142,6 +142,30 @@ async def get_blog_statistics(db: Session = Depends(get_db)):
     return crud.get_blog_stats(db)
 
 
+@router.get("/blog/posts/by-canonical", response_model=BlogPostPublicDetail)
+async def get_post_by_canonical_url(
+    url: str = Query(..., description="Canonical URL to lookup"),
+    db: Session = Depends(get_db)
+):
+    """
+    Get a published blog post by its canonical URL
+
+    This endpoint allows looking up posts by their canonical URL,
+    which is useful for SEO and handling duplicate content.
+    """
+    # Query the database for a post with this canonical URL
+    post = crud.get_post_by_canonical_url(db, url)
+
+    if not post or not post.published:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Blog post not found with this canonical URL"
+        )
+
+    # Don't increment view count for canonical lookups (it's metadata, not a view)
+    return post
+
+
 @router.get("/sitemap.xml")
 async def get_sitemap(db: Session = Depends(get_db)):
     """Generate XML sitemap for SEO"""

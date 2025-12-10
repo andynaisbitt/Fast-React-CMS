@@ -25,6 +25,7 @@ const DynamicPage = lazy(() => import('../pages/DynamicPage'));
 const PagesList = lazy(() => import('../pages/admin/PagesList'));
 const PageEditor = lazy(() => import('../pages/admin/PageEditor'));
 const Unsubscribe = lazy(() => import('../pages/Unsubscribe'));
+const CanonicalResolver = lazy(() => import('../components/CanonicalResolver'));
 
 // Loading component
 const PageLoader = () => (
@@ -279,7 +280,20 @@ export const AppRoutes = () => {
           }
         />
 
-        {/* Catch all - redirect to home */}
+        {/* Canonical URL resolver - MUST BE SECOND-TO-LAST
+            This catches any URLs that might be canonical URLs
+            and redirects them to the proper slug-based route.
+            Order matters: this must be before the final 404 redirect. */}
+        <Route
+          path="/:possibleCanonical"
+          element={
+            <Layout>
+              <CanonicalResolver />
+            </Layout>
+          }
+        />
+
+        {/* 404 catch-all - MUST BE LAST */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

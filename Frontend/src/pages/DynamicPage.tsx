@@ -79,6 +79,16 @@ export const DynamicPage: React.FC<DynamicPageProps> = ({ slug: propSlug }) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={page.meta_title || page.title} />
         {page.meta_description && <meta name="twitter:description" content={page.meta_description} />}
+
+        {/* Canonical URL - Critical for SEO */}
+        {page.canonical_url ? (
+          <link rel="canonical" href={page.canonical_url} />
+        ) : (
+          <link rel="canonical" href={`${window.location.origin}/pages/${page.slug}`} />
+        )}
+
+        {/* Add og:url for social media crawlers */}
+        <meta property="og:url" content={page.canonical_url || `${window.location.origin}/pages/${page.slug}`} />
       </Helmet>
 
       <BlockRenderer blocks={page.blocks} />

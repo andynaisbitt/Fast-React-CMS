@@ -107,6 +107,16 @@ export const BlogPostView: React.FC = () => {
         {post.tags.map(tag => (
           <meta key={tag.id} property="article:tag" content={tag.name} />
         ))}
+
+        {/* Canonical URL - Critical for SEO */}
+        {post.canonical_url ? (
+          <link rel="canonical" href={post.canonical_url} />
+        ) : (
+          <link rel="canonical" href={`${window.location.origin}/blog/${post.slug}`} />
+        )}
+
+        {/* Add og:url for social media crawlers */}
+        <meta property="og:url" content={post.canonical_url || `${window.location.origin}/blog/${post.slug}`} />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-12">
