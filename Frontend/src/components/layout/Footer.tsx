@@ -293,7 +293,7 @@ export const Footer: React.FC = () => {
                 <p className="text-xs text-gray-500">
                   Powered by{' '}
                   <a
-                    href="https://github.com/yourusername/fastreactcms"
+                    href="https://github.com/andynaisbitt/fastreactcms"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400 transition"
