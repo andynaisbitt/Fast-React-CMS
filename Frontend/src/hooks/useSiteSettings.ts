@@ -33,6 +33,26 @@ export interface SiteSettings {
   statsReaders: string;
   statsFree: string;
 
+  // Homepage Section Visibility
+  showHero: boolean;
+  showCarousel: boolean;
+  showCategories: boolean;
+  showRecentPosts: boolean;
+
+  // Homepage Content Limits
+  carouselLimit: number;
+  categoriesLimit: number;
+  recentPostsLimit: number;
+
+  // CTA Button URLs
+  ctaPrimaryUrl: string;
+  ctaSecondaryUrl: string;
+
+  // Carousel Settings
+  carouselAutoplay: boolean;
+  carouselInterval: number;
+  carouselTransition: 'crossfade' | 'slide' | 'none';
+
   // Social Media
   twitterHandle: string;
   facebookUrl: string;
@@ -85,6 +105,26 @@ const defaultSettings: SiteSettings = {
   statsReaders: '',
   statsFree: '',
 
+  // Section Visibility (all enabled by default)
+  showHero: true,
+  showCarousel: true,
+  showCategories: true,
+  showRecentPosts: true,
+
+  // Content Limits
+  carouselLimit: 5,
+  categoriesLimit: 6,
+  recentPostsLimit: 6,
+
+  // CTA URLs
+  ctaPrimaryUrl: '/blog',
+  ctaSecondaryUrl: '/about',
+
+  // Carousel Settings
+  carouselAutoplay: true,
+  carouselInterval: 7000,
+  carouselTransition: 'crossfade',
+
   twitterHandle: '',
   facebookUrl: '',
   linkedinUrl: '',
@@ -125,6 +165,18 @@ const convertToCamelCase = (apiSettings: any): SiteSettings => {
     statsArticles: apiSettings.stats_articles || '',
     statsReaders: apiSettings.stats_readers || '',
     statsFree: apiSettings.stats_free || '',
+    showHero: apiSettings.show_hero !== undefined ? apiSettings.show_hero : true,
+    showCarousel: apiSettings.show_carousel !== undefined ? apiSettings.show_carousel : true,
+    showCategories: apiSettings.show_categories !== undefined ? apiSettings.show_categories : true,
+    showRecentPosts: apiSettings.show_recent_posts !== undefined ? apiSettings.show_recent_posts : true,
+    carouselLimit: apiSettings.carousel_limit || 5,
+    categoriesLimit: apiSettings.categories_limit || 6,
+    recentPostsLimit: apiSettings.recent_posts_limit || 6,
+    ctaPrimaryUrl: apiSettings.cta_primary_url || '/blog',
+    ctaSecondaryUrl: apiSettings.cta_secondary_url || '/about',
+    carouselAutoplay: apiSettings.carousel_autoplay !== undefined ? apiSettings.carousel_autoplay : true,
+    carouselInterval: apiSettings.carousel_interval || 7000,
+    carouselTransition: apiSettings.carousel_transition || 'crossfade',
     twitterHandle: apiSettings.twitter_handle || '',
     facebookUrl: apiSettings.facebook_url || '',
     linkedinUrl: apiSettings.linkedin_url || '',

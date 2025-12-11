@@ -1,6 +1,6 @@
 # Backend/app/api/v1/services/site_settings/schemas.py
 """Site settings schemas"""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -30,6 +30,34 @@ class SiteSettingsBase(BaseModel):
     stats_articles: Optional[str] = Field(None, max_length=20)
     stats_readers: Optional[str] = Field(None, max_length=20)
     stats_free: Optional[str] = Field(None, max_length=20)
+
+    # Homepage Section Visibility
+    show_hero: bool = Field(default=True)
+    show_carousel: bool = Field(default=True)
+    show_categories: bool = Field(default=True)
+    show_recent_posts: bool = Field(default=True)
+
+    # Homepage Content Limits
+    carousel_limit: int = Field(default=5, ge=1, le=20)
+    categories_limit: int = Field(default=6, ge=1, le=20)
+    recent_posts_limit: int = Field(default=6, ge=1, le=50)
+
+    # CTA Button URLs
+    cta_primary_url: str = Field(default='/blog', max_length=255)
+    cta_secondary_url: str = Field(default='/about', max_length=255)
+
+    # Carousel Settings
+    carousel_autoplay: bool = Field(default=True)
+    carousel_interval: int = Field(default=7000, ge=2000, le=30000)
+    carousel_transition: str = Field(default='crossfade', max_length=20)
+
+    @field_validator('carousel_transition')
+    @classmethod
+    def validate_transition(cls, v: str) -> str:
+        allowed = ['crossfade', 'slide', 'none']
+        if v not in allowed:
+            raise ValueError(f'Must be one of: {", ".join(allowed)}')
+        return v
 
     # Social Media
     twitter_handle: Optional[str] = Field(None, max_length=100)
@@ -84,6 +112,36 @@ class SiteSettingsUpdate(BaseModel):
     stats_articles: Optional[str] = Field(None, max_length=20)
     stats_readers: Optional[str] = Field(None, max_length=20)
     stats_free: Optional[str] = Field(None, max_length=20)
+
+    # Homepage Section Visibility
+    show_hero: Optional[bool] = Field(None)
+    show_carousel: Optional[bool] = Field(None)
+    show_categories: Optional[bool] = Field(None)
+    show_recent_posts: Optional[bool] = Field(None)
+
+    # Homepage Content Limits
+    carousel_limit: Optional[int] = Field(None, ge=1, le=20)
+    categories_limit: Optional[int] = Field(None, ge=1, le=20)
+    recent_posts_limit: Optional[int] = Field(None, ge=1, le=50)
+
+    # CTA Button URLs
+    cta_primary_url: Optional[str] = Field(None, max_length=255)
+    cta_secondary_url: Optional[str] = Field(None, max_length=255)
+
+    # Carousel Settings
+    carousel_autoplay: Optional[bool] = Field(None)
+    carousel_interval: Optional[int] = Field(None, ge=2000, le=30000)
+    carousel_transition: Optional[str] = Field(None, max_length=20)
+
+    @field_validator('carousel_transition')
+    @classmethod
+    def validate_transition(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        allowed = ['crossfade', 'slide', 'none']
+        if v not in allowed:
+            raise ValueError(f'Must be one of: {", ".join(allowed)}')
+        return v
 
     # Social Media
     twitter_handle: Optional[str] = Field(None, max_length=100)

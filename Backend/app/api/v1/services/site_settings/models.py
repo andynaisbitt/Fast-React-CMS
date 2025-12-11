@@ -39,6 +39,26 @@ class SiteSettings(Base):
     stats_readers = Column(String(20), nullable=True)
     stats_free = Column(String(20), nullable=True)
 
+    # Homepage Section Visibility
+    show_hero = Column(Boolean, default=True, nullable=False)
+    show_carousel = Column(Boolean, default=True, nullable=False)
+    show_categories = Column(Boolean, default=True, nullable=False)
+    show_recent_posts = Column(Boolean, default=True, nullable=False)
+
+    # Homepage Content Limits
+    carousel_limit = Column(Integer, default=5, nullable=False)
+    categories_limit = Column(Integer, default=6, nullable=False)
+    recent_posts_limit = Column(Integer, default=6, nullable=False)
+
+    # CTA Button URLs
+    cta_primary_url = Column(String(255), default='/blog', nullable=False)
+    cta_secondary_url = Column(String(255), default='/about', nullable=False)
+
+    # Carousel Settings
+    carousel_autoplay = Column(Boolean, default=True, nullable=False)
+    carousel_interval = Column(Integer, default=7000, nullable=False)
+    carousel_transition = Column(String(20), default='crossfade', nullable=False)
+
     # Social Media
     twitter_handle = Column(String(100), nullable=True)
     facebook_url = Column(String(255), nullable=True)
