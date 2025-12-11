@@ -49,13 +49,13 @@ export const GoogleAdSense: React.FC = () => {
 
     const safeClientId = sanitizeId(clientId);
 
-    // Check if already loaded
+    // Check if already loaded (either by index.html or previous component mount)
     if (document.querySelector('[src*="adsbygoogle.js"]')) {
-      console.log('[AdSense] Auto Ads script already loaded');
+      console.log('[AdSense] Auto Ads script already present in HTML');
       return;
     }
 
-    console.log('[AdSense] Initializing Auto Ads:', safeClientId);
+    console.log('[AdSense] Dynamically loading Auto Ads:', safeClientId);
 
     // Initialize adsbygoogle array
     window.adsbygoogle = window.adsbygoogle || [];
