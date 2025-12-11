@@ -4,6 +4,7 @@ import os
 import shutil
 import uuid
 import io
+import xml.etree.ElementTree as ET
 from typing import Optional, Tuple
 from datetime import datetime
 from pathlib import Path
@@ -21,16 +22,55 @@ logger = logging.getLogger(__name__)
 # Configuration
 UPLOAD_DIR = Path("static/blog/uploads")
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"}
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"}
 
 # Create upload directory if it doesn't exist
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def validate_svg(file_content: bytes) -> None:
+    """
+    Validate SVG file for security
+    Prevents XSS attacks by checking for dangerous elements
+    """
+    try:
+        # Parse SVG XML
+        root = ET.fromstring(file_content)
+
+        # Dangerous elements that could execute scripts
+        dangerous_tags = {'script', 'iframe', 'object', 'embed', 'foreignObject'}
+
+        # Check all elements in the SVG
+        for elem in root.iter():
+            # Get tag name without namespace
+            tag = elem.tag.split('}')[-1].lower() if '}' in elem.tag else elem.tag.lower()
+
+            if tag in dangerous_tags:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"SVG contains forbidden element: {tag}"
+                )
+
+            # Check for event handlers in attributes (onclick, onload, etc.)
+            for attr_name in elem.attrib:
+                if attr_name.lower().startswith('on'):
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"SVG contains forbidden event handler: {attr_name}"
+                    )
+
+        logger.info("SVG validation passed")
+    except ET.ParseError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid SVG file: {str(e)}"
+        )
+
+
 def validate_image(file: UploadFile) -> None:
     """Validate uploaded image file"""
-    
+
     # Check file extension
     file_ext = Path(file.filename).suffix.lower()
     if file_ext not in ALLOWED_EXTENSIONS:
@@ -38,7 +78,7 @@ def validate_image(file: UploadFile) -> None:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"File type not allowed. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}"
         )
-    
+
     # Check MIME type
     if file.content_type not in ALLOWED_IMAGE_TYPES:
         raise HTTPException(
@@ -129,17 +169,27 @@ async def upload_blog_image(
             detail=f"File too large. Maximum size: {MAX_FILE_SIZE / 1024 / 1024}MB"
         )
 
-    # Validate file is actually a valid image (prevents corrupted/malicious files)
-    try:
-        img = Image.open(io.BytesIO(file_content))
-        img.verify()  # Verifies image integrity
-        logger.info(f"Image verified: {img.format} {img.size}")
-    except Exception as e:
-        logger.warning(f"Invalid image file uploaded: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="File is not a valid image or is corrupted"
-        )
+    # Determine if file is SVG
+    file_ext = Path(safe_filename).suffix.lower()
+    is_svg = file_ext == '.svg'
+
+    # Validate based on file type
+    if is_svg:
+        # Validate SVG for security (no scripts, no event handlers)
+        validate_svg(file_content)
+        logger.info("SVG file validated successfully")
+    else:
+        # Validate raster image is actually a valid image (prevents corrupted/malicious files)
+        try:
+            img = Image.open(io.BytesIO(file_content))
+            img.verify()  # Verifies image integrity
+            logger.info(f"Image verified: {img.format} {img.size}")
+        except Exception as e:
+            logger.warning(f"Invalid image file uploaded: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="File is not a valid image or is corrupted"
+            )
 
     # Reset file pointer for saving
     await file.seek(0)
@@ -164,14 +214,16 @@ async def upload_blog_image(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to save file: {str(e)}"
         )
-    
-    # Optimize image if requested
-    if optimize:
+
+    # Optimize image if requested (skip for SVG files)
+    if optimize and not is_svg:
         optimize_image(file_path)
     
     # Get final file size and dimensions
     final_size = file_path.stat().st_size
-    width, height = get_image_dimensions(file_path)
+
+    # Get dimensions (SVG files will return 0, 0 which is fine)
+    width, height = get_image_dimensions(file_path) if not is_svg else (0, 0)
     
     # Generate URL (relative to static directory)
     relative_path = str(file_path.relative_to(Path("static")))

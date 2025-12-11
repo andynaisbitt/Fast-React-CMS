@@ -50,6 +50,10 @@ interface SiteSettings {
   logo_url: string;
   logo_dark_url: string;
 
+  // Favicon
+  favicon_url: string;
+  favicon_dark_url: string;
+
   // Branding
   show_powered_by: boolean;
 
@@ -112,6 +116,8 @@ const defaultSettings: SiteSettings = {
   site_url: 'https://yourdomain.com',
   logo_url: '',
   logo_dark_url: '',
+  favicon_url: '',
+  favicon_dark_url: '',
   show_powered_by: true,
 
   // Newsletter & Email defaults
@@ -151,6 +157,7 @@ export const SiteSettings: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'analytics' | 'seo' | 'homepage' | 'layout' | 'social' | 'contact' | 'branding' | 'email'>('homepage');
   const [uploadingLogo, setUploadingLogo] = useState<'light' | 'dark' | null>(null);
+  const [uploadingFavicon, setUploadingFavicon] = useState<'light' | 'dark' | null>(null);
 
   // Helper to convert null values to defaults
   const cleanSettings = (data: any): SiteSettings => {
@@ -284,6 +291,55 @@ export const SiteSettings: React.FC = () => {
       setError(`Failed to upload ${logoType} logo. Please try again.`);
     } finally {
       setUploadingLogo(null);
+    }
+  };
+
+  const handleFaviconUpload = async (file: File, faviconType: 'light' | 'dark') => {
+    if (!file) return;
+
+    // Validate file type (SVG, PNG, WebP, ICO)
+    const validTypes = ['image/svg+xml', 'image/png', 'image/webp', 'image/x-icon'];
+    if (!validTypes.includes(file.type)) {
+      setError('Please upload a valid favicon (SVG, PNG, WebP, or ICO)');
+      return;
+    }
+
+    // Validate file size (1MB max for favicon)
+    if (file.size > 1024 * 1024) {
+      setError('Favicon must be less than 1MB');
+      return;
+    }
+
+    try {
+      setUploadingFavicon(faviconType);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('alt_text', `Site favicon (${faviconType} mode)`);
+
+      const response = await fetch('/api/v1/admin/blog/media/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+
+      // Auto-populate the URL field
+      const field = faviconType === 'light' ? 'favicon_url' : 'favicon_dark_url';
+      setSettings({ ...settings, [field]: data.url });
+
+      console.log(`✓ ${faviconType} favicon uploaded successfully: ${data.url}`);
+    } catch (err) {
+      console.error('Error uploading favicon:', err);
+      setError(`Failed to upload ${faviconType} favicon. Please try again.`);
+    } finally {
+      setUploadingFavicon(null);
     }
   };
 
@@ -1069,6 +1125,165 @@ VITE_ADSENSE_CLIENT_ID=${settings.google_adsense_client_id || 'ca-pub-XXXXXXXXXX
                     </div>
                   </div>
                 )}
+
+                {/* Favicon Upload Section */}
+                <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    Favicon (Browser Tab Icon)
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Upload custom favicons for light and dark modes. Recommended: 32x32px SVG or PNG.
+                  </p>
+
+                  <div className="space-y-4">
+                    {/* Light Mode Favicon */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Favicon (Light Mode)
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="url"
+                          value={settings.favicon_url}
+                          onChange={(e) => handleChange('favicon_url', e.target.value)}
+                          placeholder="/apprentice.svg or https://yourdomain.com/favicon.svg"
+                          className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <label className="relative">
+                          <input
+                            type="file"
+                            accept="image/svg+xml,image/png,image/webp,image/x-icon"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFaviconUpload(file, 'light');
+                            }}
+                            disabled={uploadingFavicon === 'light'}
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const inputs = document.querySelectorAll<HTMLInputElement>('input[type="file"][accept*="svg"]');
+                              inputs[0]?.click();
+                            }}
+                            disabled={uploadingFavicon === 'light'}
+                            className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                          >
+                            {uploadingFavicon === 'light' ? (
+                              <span className="flex items-center gap-2">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                Uploading...
+                              </span>
+                            ) : (
+                              '📤 Upload'
+                            )}
+                          </button>
+                        </label>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Favicon for light mode (paste URL or upload: SVG, PNG, WebP, or ICO - max 1MB)
+                      </p>
+                    </div>
+
+                    {/* Dark Mode Favicon */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Favicon (Dark Mode)
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="url"
+                          value={settings.favicon_dark_url}
+                          onChange={(e) => handleChange('favicon_dark_url', e.target.value)}
+                          placeholder="/apprentice-dark.svg or https://yourdomain.com/favicon-dark.svg"
+                          className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <label className="relative">
+                          <input
+                            type="file"
+                            accept="image/svg+xml,image/png,image/webp,image/x-icon"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFaviconUpload(file, 'dark');
+                            }}
+                            disabled={uploadingFavicon === 'dark'}
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const input = (e.currentTarget.previousElementSibling as HTMLInputElement);
+                              input?.click();
+                            }}
+                            disabled={uploadingFavicon === 'dark'}
+                            className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                          >
+                            {uploadingFavicon === 'dark' ? (
+                              <span className="flex items-center gap-2">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                Uploading...
+                              </span>
+                            ) : (
+                              '📤 Upload'
+                            )}
+                          </button>
+                        </label>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Optional - falls back to light mode favicon if not set
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Favicon Preview */}
+                  {(settings.favicon_url || settings.favicon_dark_url) && (
+                    <div className="mt-4 border-t border-gray-200 dark:border-slate-700 pt-4">
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Favicon Preview
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {settings.favicon_url && (
+                          <div className="bg-white dark:bg-slate-700 p-4 rounded-lg border border-gray-200 dark:border-slate-600">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Light Mode</p>
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={settings.favicon_url}
+                                alt="Favicon (Light)"
+                                className="w-8 h-8 border border-gray-300 dark:border-slate-500 rounded"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                              <code className="text-xs text-gray-600 dark:text-gray-300 break-all">
+                                {settings.favicon_url}
+                              </code>
+                            </div>
+                          </div>
+                        )}
+                        {settings.favicon_dark_url && (
+                          <div className="bg-slate-900 p-4 rounded-lg border border-slate-700">
+                            <p className="text-xs text-gray-400 mb-2">Dark Mode</p>
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={settings.favicon_dark_url}
+                                alt="Favicon (Dark)"
+                                className="w-8 h-8 border border-slate-500 rounded"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                              <code className="text-xs text-gray-300 break-all">
+                                {settings.favicon_dark_url}
+                              </code>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
                   <div className="flex items-center justify-between">

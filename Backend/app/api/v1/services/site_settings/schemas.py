@@ -73,6 +73,10 @@ class SiteSettingsBase(BaseModel):
     logo_url: Optional[str] = Field(None, max_length=255)
     logo_dark_url: Optional[str] = Field(None, max_length=255)
 
+    # Favicon
+    favicon_url: Optional[str] = Field(None, max_length=255)
+    favicon_dark_url: Optional[str] = Field(None, max_length=255)
+
     # Branding
     show_powered_by: bool = Field(default=True)
 
@@ -156,6 +160,10 @@ class SiteSettingsUpdate(BaseModel):
     # Logo
     logo_url: Optional[str] = Field(None, max_length=255)
     logo_dark_url: Optional[str] = Field(None, max_length=255)
+
+    # Favicon
+    favicon_url: Optional[str] = Field(None, max_length=255)
+    favicon_dark_url: Optional[str] = Field(None, max_length=255)
 
     # Branding
     show_powered_by: Optional[bool] = Field(None)

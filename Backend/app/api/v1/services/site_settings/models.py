@@ -73,6 +73,10 @@ class SiteSettings(Base):
     logo_url = Column(String(255), nullable=True)
     logo_dark_url = Column(String(255), nullable=True)
 
+    # Favicon
+    favicon_url = Column(String(255), nullable=True)
+    favicon_dark_url = Column(String(255), nullable=True)
+
     # Branding
     show_powered_by = Column(Boolean, default=True, nullable=True)
 

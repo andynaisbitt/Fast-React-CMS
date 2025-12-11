@@ -6,6 +6,7 @@ import { AppRoutes } from './routes/routes';
 import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import { CookieConsent } from './components/CookieConsent';
 import { DynamicTitle } from './components/DynamicTitle';
+import { FaviconManager } from './components/FaviconManager';
 import './index.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <ThemeProvider>
           <AuthProvider>
             <DynamicTitle />
+            <FaviconManager />
             <GoogleAnalytics />
             <CookieConsent />
             <AppRoutes />

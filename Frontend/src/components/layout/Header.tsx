@@ -262,6 +262,8 @@ export const Header: React.FC = () => {
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
                 // Refresh theme to apply correct background color
                 refreshTheme();
+                // Dispatch custom event for favicon manager
+                window.dispatchEvent(new CustomEvent('themeChanged', { detail: { isDark } }));
               }}
               className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
               aria-label="Toggle theme"
