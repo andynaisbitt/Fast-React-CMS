@@ -2,9 +2,11 @@
 /**
  * Custom hook for managing GDPR cookie consent
  * Stores preferences in localStorage
+ * Integrates with Google Consent Mode v2 for AdSense compliance
  */
 
 import { useState, useEffect } from 'react';
+import { updateConsentMode } from '../utils/googleConsentMode';
 
 export interface CookiePreferences {
   necessary: boolean; // Always true
@@ -89,10 +91,15 @@ export const useCookieConsent = () => {
       setPreferences(prefs);
       setHasConsent(true);
 
+      // Update Google Consent Mode v2 (for AdSense compliance)
+      updateConsentMode(prefs);
+
       // Trigger consent update event for analytics/tracking scripts
       window.dispatchEvent(
         new CustomEvent('cookieConsentUpdated', { detail: prefs })
       );
+
+      console.log('[Cookie Consent] Saved preferences:', prefs);
     } catch (error) {
       console.error('Error saving cookie consent:', error);
     }

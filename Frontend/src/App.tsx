@@ -7,7 +7,13 @@ import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import { CookieConsent } from './components/CookieConsent';
 import { DynamicTitle } from './components/DynamicTitle';
 import { FaviconManager } from './components/FaviconManager';
+import { initializeConsentMode, initializeFromStorage } from './utils/googleConsentMode';
 import './index.css';
+
+// CRITICAL: Initialize Google Consent Mode v2 BEFORE app renders
+// This must run before any Google scripts (Analytics, AdSense) load
+initializeConsentMode();
+initializeFromStorage();
 
 function App() {
   return (
