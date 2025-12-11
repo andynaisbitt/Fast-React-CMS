@@ -103,19 +103,27 @@ psql fastreactcms_db -c "SELECT id, title, published FROM blog_posts WHERE canon
 **Check Status:**
 ```bash
 # On production server
-pm2 list
+sudo systemctl status fastreactcms-ssr
 ```
 
 **Fix:**
 ```bash
-cd /var/www/fastreactcms/Frontend
-pm2 start server.js --name ssr-server
-pm2 save
+# Start the service
+sudo systemctl start fastreactcms-ssr
+
+# Enable auto-start on boot
+sudo systemctl enable fastreactcms-ssr
+
+# Check status again
+sudo systemctl status fastreactcms-ssr
 ```
 
 **Verify:**
 ```bash
-pm2 logs ssr-server
+# Check logs
+sudo journalctl -u fastreactcms-ssr -n 50 --no-pager
+
+# Test health endpoint
 curl http://localhost:3001/health
 ```
 
@@ -127,6 +135,16 @@ Expected response:
   "cache_max": 100,
   "uptime": 123.45
 }
+```
+
+**If service fails to start:**
+```bash
+# Check error logs
+sudo journalctl -u fastreactcms-ssr -n 100 --no-pager
+sudo cat /var/log/fastreactcms-ssr-error.log
+
+# Restart the service
+sudo systemctl restart fastreactcms-ssr
 ```
 
 ---
@@ -276,13 +294,17 @@ https://example.com/RAM-Price-Spikes               # Wrong domain
 ### SSR Server
 ```bash
 # Check if running
-pm2 list | grep ssr-server
+sudo systemctl status fastreactcms-ssr
 
-# Check logs
-pm2 logs ssr-server --lines 50
+# Check logs (live)
+sudo journalctl -u fastreactcms-ssr -f
+
+# Check recent logs
+sudo journalctl -u fastreactcms-ssr -n 50 --no-pager
+sudo cat /var/log/fastreactcms-ssr.log
 
 # Restart if needed
-pm2 restart ssr-server
+sudo systemctl restart fastreactcms-ssr
 
 # Check health endpoint
 curl http://localhost:3001/health
@@ -291,10 +313,10 @@ curl http://localhost:3001/health
 ### Backend API
 ```bash
 # Check if running
-sudo systemctl status fastreactcms
+sudo systemctl status fastreactcms-backend
 
 # Check logs
-sudo journalctl -u fastreactcms -n 50 --no-pager
+sudo journalctl -u fastreactcms-backend -n 50 --no-pager
 
 # Test canonical endpoint
 curl "http://localhost:8100/api/v1/content/by-canonical?url=https://theitapprentice.com/RAM-Price-Spikes"
@@ -329,7 +351,7 @@ sudo systemctl reload nginx
 
 ### ✅ SEO Meta Tags (Crawlers)
 
-- [ ] SSR server is running (`pm2 list`)
+- [ ] SSR server is running (`sudo systemctl status fastreactcms-ssr`)
 - [ ] SSR health check works (`curl localhost:3001/health`)
 - [ ] NGINX has crawler detection map (`$is_crawler`)
 - [ ] NGINX routes crawlers to SSR (`@ssr` location)
@@ -387,7 +409,8 @@ sudo systemctl reload nginx
 **Quick Fix:**
 ```bash
 # 1. Start SSR server
-pm2 start server.js --name ssr-server
+sudo systemctl start fastreactcms-ssr
+sudo systemctl status fastreactcms-ssr
 
 # 2. Verify canonical URLs in database
 psql fastreactcms_db -c "SELECT canonical_url FROM blog_posts WHERE canonical_url IS NOT NULL;"
