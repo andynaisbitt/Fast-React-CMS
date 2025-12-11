@@ -44,19 +44,24 @@ FastReactCMS combines the best of modern web development with a developer-first 
 - **Theme Customization** - Real-time color and typography controls
 - **Dark Mode** - Beautiful dark theme across the entire platform
 - **Mobile-First** - Responsive design that works on every device
+- **Homepage Builder** - Fully customizable homepage with hero, carousel, categories, and stats sections
 
 ### Content Management
 - **Rich Blog Editor** - Markdown support, image uploads, and SEO optimization
 - **Category & Tag System** - Organize content with unlimited categories and tags
 - **Draft System** - Save and publish content when ready
-- **Media Library** - Image upload and management
+- **Media Library** - Image upload and management with SVG support
 - **Newsletter System** - Email subscription and newsletter management (v1.3)
+- **Logo & Favicon Upload** - Custom branding with theme-aware light/dark mode support
+- **Comprehensive Site Settings** - Centralized control for SEO, analytics, branding, and more
 
 ### Security & Performance
 - **HTTP-Only Cookies** - JWT tokens never exposed to JavaScript (XSS protection)
 - **CSRF Protection** - Token-based protection on all state-changing requests
 - **bcrypt Password Hashing** - Industry-standard password security
 - **Rate Limiting** - Brute force protection on authentication
+- **SVG XSS Prevention** - Secure SVG upload validation blocks malicious code
+- **CSP-Compliant Analytics** - Google Analytics & AdSense integration following Content Security Policy
 - **Secure by Default** - See our [Security Audit Report](SECURITY_AUDIT_REPORT.md) (A+ rating)
 
 ### Developer Experience
@@ -370,15 +375,18 @@ See `Frontend/.env.example` for complete configuration options.
    - Featured image (optional)
 5. Toggle "Published" and save
 
-### Customizing Your Theme
+### Customizing Your Site
 
 1. Go to `/admin/settings/site`
-2. Configure:
-   - **General**: Site name, tagline, logo
-   - **Theme**: Colors (light/dark mode), typography
-   - **Navigation**: Menu items, dropdowns
-   - **SEO**: Default meta tags, social sharing
-   - **Integrations**: Google Analytics, AdSense
+2. Configure across 8 comprehensive tabs:
+   - **Homepage**: Hero section, CTAs, stats display
+   - **Homepage Layout**: Carousel, categories, recent posts sections
+   - **SEO & Domain**: Meta tags, Open Graph, site URL
+   - **Branding & Logo**: Upload logos and favicons (light/dark mode)
+   - **Analytics & Ads**: Google Analytics, AdSense (CSP-compliant)
+   - **Social Media**: Twitter, Facebook, LinkedIn, GitHub links
+   - **Contact Info**: Email addresses
+   - **Email & Newsletter**: SMTP configuration, newsletter settings
 
 ### Building Custom Pages
 
@@ -564,7 +572,7 @@ We take all security reports seriously and will respond promptly.
 
 ## Roadmap
 
-### ✅ v1.3 (Current - December 2025)
+### ✅ v1.4 (Current - December 2025)
 
 **Core Features:**
 - ✅ Blog system with categories and tags
@@ -573,11 +581,11 @@ We take all security reports seriously and will respond promptly.
 - ✅ SEO optimization (meta tags, slugs, RSS feeds, sitemap)
 - ✅ Admin panel with content management
 - ✅ User authentication (JWT + HTTP-only cookies)
-- ✅ Security hardening (CSRF, bcrypt, rate limiting)
-- ✅ Google Analytics & AdSense integration ready
+- ✅ Security hardening (CSRF, bcrypt, rate limiting, SVG XSS prevention)
+- ✅ CSP-compliant Google Analytics & AdSense integration
 - ✅ Responsive design (mobile/tablet/desktop)
 - ✅ Dark mode support
-- ✅ Image upload and management
+- ✅ Image upload and management (PNG, JPG, WebP, SVG)
 - ✅ Markdown support for content
 
 **Newsletter System (v1.3):**
@@ -589,7 +597,24 @@ We take all security reports seriously and will respond promptly.
 - ✅ Mobile-optimized admin interface
 - ✅ Active/Inactive subscriber tracking
 
+**Homepage Customization (v1.4):**
+- ✅ Fully customizable hero section (title, subtitle, badge, CTAs)
+- ✅ Homepage stats display (configurable or hidden)
+- ✅ Featured carousel with crossfade transitions and autoplay
+- ✅ Categories showcase with customizable limits
+- ✅ Recent posts grid with flexible layouts
+- ✅ Toggle sections on/off via admin panel
+- ✅ Mobile-optimized homepage layout
+
+**Branding & Assets (v1.4):**
+- ✅ Logo upload system (light & dark mode variants)
+- ✅ Theme-aware favicon system (automatically switches with theme)
+- ✅ SVG upload support with XSS security validation
+- ✅ Favicon management through admin panel
+- ✅ Default minimalist wizard/apprentice favicons included
+
 **Recent Updates:**
+- v1.4 (Dec 2025): Favicon upload, homepage customization, logo upload, CSP-compliant analytics
 - v1.3 (Dec 2025): Newsletter system with complete subscriber management
 - v1.2 (Dec 2025): Mobile UX improvements across admin panel
 - v1.1 (Dec 2025): Production deployment fixes and optimizations
