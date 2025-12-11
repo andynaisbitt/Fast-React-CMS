@@ -121,10 +121,10 @@ export const BlogPostView: React.FC = () => {
 
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className={`grid grid-cols-1 gap-8 ${post.category ? 'lg:grid-cols-12' : ''}`}>
             {/* Main Article Column */}
             <motion.article
-              className="lg:col-span-8"
+              className={post.category ? "lg:col-span-8" : "max-w-4xl mx-auto"}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -240,22 +240,22 @@ export const BlogPostView: React.FC = () => {
           </div>
             </motion.article>
 
-            {/* Sidebar Column (Desktop Only) */}
-            <motion.aside
-              className="lg:col-span-4 hidden lg:block"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              {/* Sticky Sidebar - Compact */}
-              <div className="sticky top-8 space-y-6">
-                {/* Sidebar Ad */}
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-slate-700">
-                  <SidebarAd />
-                </div>
+            {/* Sidebar Column (Desktop Only) - Only show if post has category */}
+            {post.category && (
+              <motion.aside
+                className="lg:col-span-4 hidden lg:block"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+              >
+                {/* Sticky Sidebar - Compact */}
+                <div className="sticky top-8 space-y-6">
+                  {/* Sidebar Ad */}
+                  <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-slate-700">
+                    <SidebarAd />
+                  </div>
 
-                {/* Category Card (if exists) */}
-                {post.category && (
+                  {/* Category Card */}
                   <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-5 border border-gray-200 dark:border-slate-700">
                     <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wide">
                       Category
@@ -264,9 +264,9 @@ export const BlogPostView: React.FC = () => {
                       {post.category.name}
                     </span>
                   </div>
-                )}
-              </div>
-            </motion.aside>
+                </div>
+              </motion.aside>
+            )}
           </div>
         </div>
       </div>
