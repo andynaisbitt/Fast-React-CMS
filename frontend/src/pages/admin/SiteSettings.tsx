@@ -179,9 +179,8 @@ export const SiteSettings: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('/api/v1/admin/site-settings', {
-        credentials: 'include'
-      });
+      // Use public endpoint for reading (no auth required)
+      const response = await fetch('/api/v1/site-settings');
 
       if (!response.ok) {
         if (response.status === 404) {
