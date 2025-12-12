@@ -71,9 +71,9 @@ CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 EOF
 echo "✅ Database and user created"
 
-# Update Backend .env file
-ENV_FILE="Backend/.env"
-ENV_EXAMPLE="Backend/.env.example"
+# Update backend .env file
+ENV_FILE="backend/.env"
+ENV_EXAMPLE="backend/.env.example"
 
 if [ ! -f "$ENV_FILE" ]; then
     if [ -f "$ENV_EXAMPLE" ]; then
@@ -128,9 +128,9 @@ else
 fi
 
 # Run database migrations
-if [ -f "Backend/alembic.ini" ]; then
+if [ -f "backend/alembic.ini" ]; then
     echo "🔄 Running database migrations..."
-    cd Backend
+    cd backend
 
     # Activate virtual environment if exists
     if [ -d "venv" ]; then
@@ -138,7 +138,7 @@ if [ -f "Backend/alembic.ini" ]; then
     fi
 
     # Run migrations
-    alembic upgrade head || echo "⚠️  Migrations failed (run manually: cd Backend && alembic upgrade head)"
+    alembic upgrade head || echo "⚠️  Migrations failed (run manually: cd backend && alembic upgrade head)"
 
     cd ..
     echo "✅ Database migrations complete"
@@ -157,9 +157,9 @@ echo "   Password: $DB_PASSWORD"
 echo "   Connection: postgresql://$DB_USER:$DB_PASSWORD@localhost/$DB_NAME"
 echo ""
 echo "📝 Next Steps:"
-echo "   1. Update admin credentials in Backend/.env"
+echo "   1. Update admin credentials in backend/.env"
 echo "   2. Run seed scripts:"
-echo "      cd Backend"
+echo "      cd backend"
 echo "      source venv/bin/activate  # (if using venv)"
 echo "      python scripts/create_admin.py"
 echo "      python scripts/seed_categories.py"
@@ -169,5 +169,5 @@ echo "   3. Start the backend:"
 echo "      uvicorn app.main:app --reload --host 0.0.0.0 --port 8100"
 echo ""
 echo "⚠️  IMPORTANT: Save your database password!"
-echo "   Password has been saved to Backend/.env"
+echo "   Password has been saved to backend/.env"
 echo "=========================================="

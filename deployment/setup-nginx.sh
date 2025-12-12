@@ -127,7 +127,7 @@ server {
     client_max_body_size 10M;
 
     # Frontend (React SPA)
-    root /var/www/fastreactcms/Frontend/dist;
+    root /var/www/fastreactcms/frontend/dist;
     index index.html;
 
     # Gzip compression
@@ -235,7 +235,7 @@ server {
 
     # Backend static files (uploads, blog images, etc.)
     location /static/ {
-        alias /var/www/fastreactcms/Backend/static/;
+        alias /var/www/fastreactcms/backend/static/;
         expires 30d;
         add_header Cache-Control "public";
         access_log off;

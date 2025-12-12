@@ -60,7 +60,7 @@ PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
 ReadWritePaths=/var/log
-ReadOnlyPaths=/var/www/fastreactcms/Frontend/dist
+ReadOnlyPaths=/var/www/fastreactcms/frontend/dist
 
 [Install]
 WantedBy=multi-user.target
