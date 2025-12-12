@@ -45,6 +45,12 @@ Development guides and contribution documentation:
 - `GITHUB_LAUNCH_PREP.md` - GitHub launch preparation
 - `SECURITY_AUDIT_REPORT.md` - Security audit findings
 
+### Root Documentation
+- `../ARCHITECTURE.md` - **System architecture and design patterns** (NEW!)
+- `../REFACTORING_PLAN.md` - 5-phase refactoring roadmap
+- `../REFACTORING_PROGRESS.md` - Current refactoring status
+- `../REFACTORING_PRODUCTION_IMPACT.md` - Production deployment guide
+
 ## 🚀 Quick Links
 
 **New Developer?** Start here:
