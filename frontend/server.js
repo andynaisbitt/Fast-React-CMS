@@ -187,9 +187,9 @@ async function fetchSiteSettings() {
   } catch (error) {
     console.error('[SSR] Failed to fetch site settings:', error.message);
     return {
-      siteTitle: 'The IT Apprentice',
-      metaDescription: 'Professional insights on technology, software development, and IT practices',
-      siteTagline: 'Learning, Building, Sharing',
+      siteTitle: 'FastReactCMS',
+      metaDescription: 'A modern, SEO-optimized blog platform built with React and FastAPI',
+      siteTagline: 'A modern blogging platform',
     };
   }
 }
@@ -218,8 +218,8 @@ function generateMetaTags(data, route, siteSettings) {
     keywords = page.meta_keywords || '';
   } else {
     // Home page or fallback
-    title = siteSettings.siteTitle || 'The IT Apprentice';
-    description = siteSettings.metaDescription || 'Professional insights on technology, software development, and IT practices';
+    title = siteSettings.siteTitle || 'FastReactCMS';
+    description = siteSettings.metaDescription || 'A modern blog platform';
     image = `${SITE_URL}/og-default.jpg`;
     url = SITE_URL;
     type = 'website';
@@ -251,7 +251,7 @@ function generateMetaTags(data, route, siteSettings) {
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:image" content="${escapeHtml(image)}" />
-    <meta property="og:site_name" content="${escapeHtml(siteSettings.siteTitle || 'The IT Apprentice')}" />
+    <meta property="og:site_name" content="${escapeHtml(siteSettings.siteTitle || 'FastReactCMS')}" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
