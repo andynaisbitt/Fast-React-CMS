@@ -11,142 +11,142 @@ import { useNavigate } from 'react-router-dom';
 
 interface SiteSettings {
   // Analytics & Ads
-  google_analytics_id: string;
-  google_adsense_client_id: string;
+  googleAnalyticsId: string;
+  googleAdsenseClientId: string;
 
   // SEO Defaults
-  site_title: string;
-  site_tagline: string;
-  meta_description: string;
-  meta_keywords: string;
-  og_image: string;
+  siteTitle: string;
+  siteTagline: string;
+  metaDescription: string;
+  metaKeywords: string;
+  ogImage: string;
 
   // Homepage Hero
-  hero_title: string;
-  hero_subtitle: string;
-  hero_badge_text: string;
-  hero_cta_primary: string;
-  hero_cta_secondary: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroBadgeText: string;
+  heroCtaPrimary: string;
+  heroCtaSecondary: string;
 
   // Homepage Stats (optional - empty string to hide)
-  stats_articles: string;
-  stats_readers: string;
-  stats_free: string;
+  statsArticles: string;
+  statsReaders: string;
+  statsFree: string;
 
   // Social Media
-  twitter_handle: string;
-  facebook_url: string;
-  linkedin_url: string;
-  github_url: string;
+  twitterHandle: string;
+  facebookUrl: string;
+  linkedinUrl: string;
+  githubUrl: string;
 
   // Contact
-  contact_email: string;
-  support_email: string;
+  contactEmail: string;
+  supportEmail: string;
 
   // Domain
-  site_url: string;
+  siteUrl: string;
 
   // Logo
-  logo_url: string;
-  logo_dark_url: string;
+  logoUrl: string;
+  logoDarkUrl: string;
 
   // Favicon
-  favicon_url: string;
-  favicon_dark_url: string;
+  faviconUrl: string;
+  faviconDarkUrl: string;
 
   // Branding
-  show_powered_by: boolean;
+  showPoweredBy: boolean;
 
   // Newsletter & Email
-  newsletter_enabled: boolean;
-  smtp_host: string;
-  smtp_port: number;
-  smtp_username: string;
-  smtp_password: string;
-  smtp_use_tls: boolean;
-  smtp_from_email: string;
-  smtp_from_name: string;
+  newsletterEnabled: boolean;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUsername: string;
+  smtpPassword: string;
+  smtpUseTls: boolean;
+  smtpFromEmail: string;
+  smtpFromName: string;
 
   // Homepage Layout
-  show_carousel: boolean;
-  carousel_title: string;
-  carousel_subtitle: string;
-  carousel_limit: number;
-  carousel_autoplay: boolean;
-  carousel_interval: number;
+  showCarousel: boolean;
+  carouselTitle: string;
+  carouselSubtitle: string;
+  carouselLimit: number;
+  carouselAutoplay: boolean;
+  carouselInterval: number;
 
-  show_categories: boolean;
-  categories_title: string;
-  categories_subtitle: string;
-  categories_limit: number;
+  showCategories: boolean;
+  categoriesTitle: string;
+  categoriesSubtitle: string;
+  categoriesLimit: number;
 
-  show_recent_posts: boolean;
-  recent_posts_title: string;
-  recent_posts_subtitle: string;
-  recent_posts_limit: number;
+  showRecentPosts: boolean;
+  recentPostsTitle: string;
+  recentPostsSubtitle: string;
+  recentPostsLimit: number;
 }
 
 const defaultSettings: SiteSettings = {
-  google_analytics_id: '',
-  google_adsense_client_id: '',
-  site_title: 'FastReactCMS',
-  site_tagline: 'A modern, SEO-optimized blog platform',
-  meta_description: 'Share your knowledge with the world using FastReactCMS - a modern blog platform built with React and FastAPI.',
-  meta_keywords: 'blog, cms, react, fastapi, seo, content management',
-  og_image: '',
+  googleAnalyticsId: '',
+  googleAdsenseClientId: '',
+  siteTitle: 'FastReactCMS',
+  siteTagline: 'A modern, SEO-optimized blog platform',
+  metaDescription: 'Share your knowledge with the world using FastReactCMS - a modern blog platform built with React and FastAPI.',
+  metaKeywords: 'blog, cms, react, fastapi, seo, content management',
+  ogImage: '',
 
   // Homepage defaults
-  hero_title: 'Share Your Story',
-  hero_subtitle: 'A modern blogging platform built for creators, writers, and developers who want full control.',
-  hero_badge_text: 'Open Source',
-  hero_cta_primary: 'Explore Articles',
-  hero_cta_secondary: 'Learn More',
+  heroTitle: 'Share Your Story',
+  heroSubtitle: 'A modern blogging platform built for creators, writers, and developers who want full control.',
+  heroBadgeText: 'Open Source',
+  heroCtaPrimary: 'Explore Articles',
+  heroCtaSecondary: 'Learn More',
 
   // Stats (empty to hide entire stats section)
-  stats_articles: '',
-  stats_readers: '',
-  stats_free: '',
+  statsArticles: '',
+  statsReaders: '',
+  statsFree: '',
 
-  twitter_handle: '',
-  facebook_url: '',
-  linkedin_url: '',
-  github_url: '',
-  contact_email: '',
-  support_email: '',
-  site_url: 'https://yourdomain.com',
-  logo_url: '',
-  logo_dark_url: '',
-  favicon_url: '',
-  favicon_dark_url: '',
-  show_powered_by: true,
+  twitterHandle: '',
+  facebookUrl: '',
+  linkedinUrl: '',
+  githubUrl: '',
+  contactEmail: '',
+  supportEmail: '',
+  siteUrl: 'https://yourdomain.com',
+  logoUrl: '',
+  logoDarkUrl: '',
+  faviconUrl: '',
+  faviconDarkUrl: '',
+  showPoweredBy: true,
 
   // Newsletter & Email defaults
-  newsletter_enabled: true,
-  smtp_host: '',
-  smtp_port: 587,
-  smtp_username: '',
-  smtp_password: '',
-  smtp_use_tls: true,
-  smtp_from_email: '',
-  smtp_from_name: '',
+  newsletterEnabled: true,
+  smtpHost: '',
+  smtpPort: 587,
+  smtpUsername: '',
+  smtpPassword: '',
+  smtpUseTls: true,
+  smtpFromEmail: '',
+  smtpFromName: '',
 
   // Homepage Layout defaults
-  show_carousel: true,
-  carousel_title: 'Featured Articles',
-  carousel_subtitle: 'Hand-picked posts showcasing our best content',
-  carousel_limit: 5,
-  carousel_autoplay: true,
-  carousel_interval: 7000,
+  showCarousel: true,
+  carouselTitle: 'Featured Articles',
+  carouselSubtitle: 'Hand-picked posts showcasing our best content',
+  carouselLimit: 5,
+  carouselAutoplay: true,
+  carouselInterval: 7000,
 
-  show_categories: true,
-  categories_title: 'Explore by Category',
-  categories_subtitle: 'Dive into topics that interest you',
-  categories_limit: 6,
+  showCategories: true,
+  categoriesTitle: 'Explore by Category',
+  categoriesSubtitle: 'Dive into topics that interest you',
+  categoriesLimit: 6,
 
-  show_recent_posts: true,
-  recent_posts_title: 'Latest Posts',
-  recent_posts_subtitle: 'Fresh content from our writers',
-  recent_posts_limit: 6,
+  showRecentPosts: true,
+  recentPostsTitle: 'Latest Posts',
+  recentPostsSubtitle: 'Fresh content from our writers',
+  recentPostsLimit: 6,
 };
 
 export const SiteSettings: React.FC = () => {
@@ -282,7 +282,7 @@ export const SiteSettings: React.FC = () => {
       const data = await response.json();
 
       // Auto-populate the URL field
-      const field = logoType === 'light' ? 'logo_url' : 'logo_dark_url';
+      const field = logoType === 'light' ? 'logoUrl' : 'logoDarkUrl';
       setSettings({ ...settings, [field]: data.url });
 
       console.log(`✓ ${logoType} logo uploaded successfully: ${data.url}`);
@@ -331,7 +331,7 @@ export const SiteSettings: React.FC = () => {
       const data = await response.json();
 
       // Auto-populate the URL field
-      const field = faviconType === 'light' ? 'favicon_url' : 'favicon_dark_url';
+      const field = faviconType === 'light' ? 'faviconUrl' : 'faviconDarkUrl';
       setSettings({ ...settings, [field]: data.url });
 
       console.log(`✓ ${faviconType} favicon uploaded successfully: ${data.url}`);
@@ -354,7 +354,7 @@ export const SiteSettings: React.FC = () => {
     { id: 'email', label: 'Email & Newsletter', icon: '✉️' },
   ] as const;
 
-  if (loading && !settings.site_title) {
+  if (loading && !settings.siteTitle) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="text-center">
@@ -452,8 +452,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.hero_title}
-                    onChange={(e) => handleChange('hero_title', e.target.value)}
+                    value={settings.heroTitle}
+                    onChange={(e) => handleChange('heroTitle', e.target.value)}
                     placeholder="Share Your Story"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -467,8 +467,8 @@ export const SiteSettings: React.FC = () => {
                     Hero Subtitle
                   </label>
                   <textarea
-                    value={settings.hero_subtitle}
-                    onChange={(e) => handleChange('hero_subtitle', e.target.value)}
+                    value={settings.heroSubtitle}
+                    onChange={(e) => handleChange('heroSubtitle', e.target.value)}
                     rows={2}
                     placeholder="A modern blogging platform..."
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -481,8 +481,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.hero_badge_text}
-                    onChange={(e) => handleChange('hero_badge_text', e.target.value)}
+                    value={settings.heroBadgeText}
+                    onChange={(e) => handleChange('heroBadgeText', e.target.value)}
                     placeholder="Open Source"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -498,8 +498,8 @@ export const SiteSettings: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={settings.hero_cta_primary}
-                      onChange={(e) => handleChange('hero_cta_primary', e.target.value)}
+                      value={settings.heroCtaPrimary}
+                      onChange={(e) => handleChange('heroCtaPrimary', e.target.value)}
                       placeholder="Explore Articles"
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -510,8 +510,8 @@ export const SiteSettings: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={settings.hero_cta_secondary}
-                      onChange={(e) => handleChange('hero_cta_secondary', e.target.value)}
+                      value={settings.heroCtaSecondary}
+                      onChange={(e) => handleChange('heroCtaSecondary', e.target.value)}
                       placeholder="Learn More"
                       className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -533,8 +533,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.stats_articles}
-                        onChange={(e) => handleChange('stats_articles', e.target.value)}
+                        value={settings.statsArticles}
+                        onChange={(e) => handleChange('statsArticles', e.target.value)}
                         placeholder="50+"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -545,8 +545,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.stats_readers}
-                        onChange={(e) => handleChange('stats_readers', e.target.value)}
+                        value={settings.statsReaders}
+                        onChange={(e) => handleChange('statsReaders', e.target.value)}
                         placeholder="10K+"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -557,8 +557,8 @@ export const SiteSettings: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        value={settings.stats_free}
-                        onChange={(e) => handleChange('stats_free', e.target.value)}
+                        value={settings.statsFree}
+                        onChange={(e) => handleChange('statsFree', e.target.value)}
                         placeholder="100% Free"
                         className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -592,22 +592,22 @@ export const SiteSettings: React.FC = () => {
                     </h3>
                     <button
                       type="button"
-                      onClick={() => handleChange('show_carousel', !settings.show_carousel)}
+                      onClick={() => handleChange('showCarousel', !settings.showCarousel)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.show_carousel
+                        settings.showCarousel
                           ? 'bg-blue-600 dark:bg-blue-700'
                           : 'bg-gray-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.show_carousel ? 'translate-x-6' : 'translate-x-1'
+                          settings.showCarousel ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
                   </div>
 
-                  {settings.show_carousel && (
+                  {settings.showCarousel && (
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -615,8 +615,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.carousel_title}
-                          onChange={(e) => handleChange('carousel_title', e.target.value)}
+                          value={settings.carouselTitle}
+                          onChange={(e) => handleChange('carouselTitle', e.target.value)}
                           placeholder="Featured Articles"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -628,8 +628,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.carousel_subtitle}
-                          onChange={(e) => handleChange('carousel_subtitle', e.target.value)}
+                          value={settings.carouselSubtitle}
+                          onChange={(e) => handleChange('carouselSubtitle', e.target.value)}
                           placeholder="Hand-picked posts showcasing our best content"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -644,8 +644,8 @@ export const SiteSettings: React.FC = () => {
                             type="number"
                             min="1"
                             max="10"
-                            value={settings.carousel_limit}
-                            onChange={(e) => handleChange('carousel_limit', parseInt(e.target.value) || 5)}
+                            value={settings.carouselLimit}
+                            onChange={(e) => handleChange('carouselLimit', parseInt(e.target.value) || 5)}
                             className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
                           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">1-10 posts</p>
@@ -660,8 +660,8 @@ export const SiteSettings: React.FC = () => {
                             min="3000"
                             max="30000"
                             step="1000"
-                            value={settings.carousel_interval}
-                            onChange={(e) => handleChange('carousel_interval', parseInt(e.target.value) || 7000)}
+                            value={settings.carouselInterval}
+                            onChange={(e) => handleChange('carouselInterval', parseInt(e.target.value) || 7000)}
                             className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
                           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">3000-30000 ms</p>
@@ -672,16 +672,16 @@ export const SiteSettings: React.FC = () => {
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Auto-play</span>
                             <button
                               type="button"
-                              onClick={() => handleChange('carousel_autoplay', !settings.carousel_autoplay)}
+                              onClick={() => handleChange('carouselAutoplay', !settings.carouselAutoplay)}
                               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                settings.carousel_autoplay
+                                settings.carouselAutoplay
                                   ? 'bg-blue-600 dark:bg-blue-700'
                                   : 'bg-gray-300 dark:bg-slate-600'
                               }`}
                             >
                               <span
                                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  settings.carousel_autoplay ? 'translate-x-6' : 'translate-x-1'
+                                  settings.carouselAutoplay ? 'translate-x-6' : 'translate-x-1'
                                 }`}
                               />
                             </button>
@@ -700,22 +700,22 @@ export const SiteSettings: React.FC = () => {
                     </h3>
                     <button
                       type="button"
-                      onClick={() => handleChange('show_categories', !settings.show_categories)}
+                      onClick={() => handleChange('showCategories', !settings.showCategories)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.show_categories
+                        settings.showCategories
                           ? 'bg-blue-600 dark:bg-blue-700'
                           : 'bg-gray-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.show_categories ? 'translate-x-6' : 'translate-x-1'
+                          settings.showCategories ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
                   </div>
 
-                  {settings.show_categories && (
+                  {settings.showCategories && (
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -723,8 +723,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.categories_title}
-                          onChange={(e) => handleChange('categories_title', e.target.value)}
+                          value={settings.categoriesTitle}
+                          onChange={(e) => handleChange('categoriesTitle', e.target.value)}
                           placeholder="Explore by Category"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -736,8 +736,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.categories_subtitle}
-                          onChange={(e) => handleChange('categories_subtitle', e.target.value)}
+                          value={settings.categoriesSubtitle}
+                          onChange={(e) => handleChange('categoriesSubtitle', e.target.value)}
                           placeholder="Dive into topics that interest you"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -751,8 +751,8 @@ export const SiteSettings: React.FC = () => {
                           type="number"
                           min="3"
                           max="12"
-                          value={settings.categories_limit}
-                          onChange={(e) => handleChange('categories_limit', parseInt(e.target.value) || 6)}
+                          value={settings.categoriesLimit}
+                          onChange={(e) => handleChange('categoriesLimit', parseInt(e.target.value) || 6)}
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">3-12 categories (best: 6 or 9)</p>
@@ -769,22 +769,22 @@ export const SiteSettings: React.FC = () => {
                     </h3>
                     <button
                       type="button"
-                      onClick={() => handleChange('show_recent_posts', !settings.show_recent_posts)}
+                      onClick={() => handleChange('showRecentPosts', !settings.showRecentPosts)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.show_recent_posts
+                        settings.showRecentPosts
                           ? 'bg-blue-600 dark:bg-blue-700'
                           : 'bg-gray-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.show_recent_posts ? 'translate-x-6' : 'translate-x-1'
+                          settings.showRecentPosts ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
                   </div>
 
-                  {settings.show_recent_posts && (
+                  {settings.showRecentPosts && (
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -792,8 +792,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.recent_posts_title}
-                          onChange={(e) => handleChange('recent_posts_title', e.target.value)}
+                          value={settings.recentPostsTitle}
+                          onChange={(e) => handleChange('recentPostsTitle', e.target.value)}
                           placeholder="Latest Posts"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -805,8 +805,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.recent_posts_subtitle}
-                          onChange={(e) => handleChange('recent_posts_subtitle', e.target.value)}
+                          value={settings.recentPostsSubtitle}
+                          onChange={(e) => handleChange('recentPostsSubtitle', e.target.value)}
                           placeholder="Fresh content from our writers"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -820,8 +820,8 @@ export const SiteSettings: React.FC = () => {
                           type="number"
                           min="3"
                           max="12"
-                          value={settings.recent_posts_limit}
-                          onChange={(e) => handleChange('recent_posts_limit', parseInt(e.target.value) || 6)}
+                          value={settings.recentPostsLimit}
+                          onChange={(e) => handleChange('recentPostsLimit', parseInt(e.target.value) || 6)}
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">3-12 posts (best: 3, 6, or 9)</p>
@@ -845,8 +845,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.google_analytics_id}
-                    onChange={(e) => handleChange('google_analytics_id', e.target.value)}
+                    value={settings.googleAnalyticsId}
+                    onChange={(e) => handleChange('googleAnalyticsId', e.target.value)}
                     placeholder="G-XXXXXXXXXX"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -861,8 +861,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.google_adsense_client_id}
-                    onChange={(e) => handleChange('google_adsense_client_id', e.target.value)}
+                    value={settings.googleAdsenseClientId}
+                    onChange={(e) => handleChange('googleAdsenseClientId', e.target.value)}
                     placeholder="ca-pub-XXXXXXXXXXXXXXXX"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -913,8 +913,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.site_title}
-                    onChange={(e) => handleChange('site_title', e.target.value)}
+                    value={settings.siteTitle}
+                    onChange={(e) => handleChange('siteTitle', e.target.value)}
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -928,8 +928,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.site_tagline}
-                    onChange={(e) => handleChange('site_tagline', e.target.value)}
+                    value={settings.siteTagline}
+                    onChange={(e) => handleChange('siteTagline', e.target.value)}
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -940,8 +940,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="url"
-                    value={settings.site_url}
-                    onChange={(e) => handleChange('site_url', e.target.value)}
+                    value={settings.siteUrl}
+                    onChange={(e) => handleChange('siteUrl', e.target.value)}
                     placeholder="https://yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -955,8 +955,8 @@ export const SiteSettings: React.FC = () => {
                     Default Meta Description
                   </label>
                   <textarea
-                    value={settings.meta_description}
-                    onChange={(e) => handleChange('meta_description', e.target.value)}
+                    value={settings.metaDescription}
+                    onChange={(e) => handleChange('metaDescription', e.target.value)}
                     rows={3}
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -971,8 +971,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.meta_keywords}
-                    onChange={(e) => handleChange('meta_keywords', e.target.value)}
+                    value={settings.metaKeywords}
+                    onChange={(e) => handleChange('metaKeywords', e.target.value)}
                     placeholder="keyword1, keyword2, keyword3"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -984,8 +984,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="url"
-                    value={settings.og_image}
-                    onChange={(e) => handleChange('og_image', e.target.value)}
+                    value={settings.ogImage}
+                    onChange={(e) => handleChange('ogImage', e.target.value)}
                     placeholder="https://yourdomain.com/og-image.jpg"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1019,8 +1019,8 @@ export const SiteSettings: React.FC = () => {
                   <div className="flex gap-2">
                     <input
                       type="url"
-                      value={settings.logo_url}
-                      onChange={(e) => handleChange('logo_url', e.target.value)}
+                      value={settings.logoUrl}
+                      onChange={(e) => handleChange('logoUrl', e.target.value)}
                       placeholder="https://yourdomain.com/logo.png"
                       className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -1064,8 +1064,8 @@ export const SiteSettings: React.FC = () => {
                   <div className="flex gap-2">
                     <input
                       type="url"
-                      value={settings.logo_dark_url}
-                      onChange={(e) => handleChange('logo_dark_url', e.target.value)}
+                      value={settings.logoDarkUrl}
+                      onChange={(e) => handleChange('logoDarkUrl', e.target.value)}
                       placeholder="https://yourdomain.com/logo-dark.png"
                       className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -1106,22 +1106,22 @@ export const SiteSettings: React.FC = () => {
                   </p>
                 </div>
 
-                {(settings.logo_url || settings.logo_dark_url) && (
+                {(settings.logoUrl || settings.logoDarkUrl) && (
                   <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
                     <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                       Logo Preview
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      {settings.logo_url && (
+                      {settings.logoUrl && (
                         <div className="bg-white dark:bg-slate-700 p-4 rounded-lg border border-gray-200 dark:border-slate-600">
                           <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Light Mode</p>
-                          <img src={settings.logo_url} alt="Logo (Light)" className="max-h-16 mx-auto" />
+                          <img src={settings.logoUrl} alt="Logo (Light)" className="max-h-16 mx-auto" />
                         </div>
                       )}
-                      {settings.logo_dark_url && (
+                      {settings.logoDarkUrl && (
                         <div className="bg-slate-900 p-4 rounded-lg border border-slate-700">
                           <p className="text-xs text-gray-400 mb-2">Dark Mode</p>
-                          <img src={settings.logo_dark_url} alt="Logo (Dark)" className="max-h-16 mx-auto" />
+                          <img src={settings.logoDarkUrl} alt="Logo (Dark)" className="max-h-16 mx-auto" />
                         </div>
                       )}
                     </div>
@@ -1146,8 +1146,8 @@ export const SiteSettings: React.FC = () => {
                       <div className="flex gap-2">
                         <input
                           type="url"
-                          value={settings.favicon_url}
-                          onChange={(e) => handleChange('favicon_url', e.target.value)}
+                          value={settings.faviconUrl}
+                          onChange={(e) => handleChange('faviconUrl', e.target.value)}
                           placeholder="/apprentice.svg or https://yourdomain.com/favicon.svg"
                           className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1196,8 +1196,8 @@ export const SiteSettings: React.FC = () => {
                       <div className="flex gap-2">
                         <input
                           type="url"
-                          value={settings.favicon_dark_url}
-                          onChange={(e) => handleChange('favicon_dark_url', e.target.value)}
+                          value={settings.faviconDarkUrl}
+                          onChange={(e) => handleChange('faviconDarkUrl', e.target.value)}
                           placeholder="/apprentice-dark.svg or https://yourdomain.com/favicon-dark.svg"
                           className="flex-1 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1240,18 +1240,18 @@ export const SiteSettings: React.FC = () => {
                   </div>
 
                   {/* Favicon Preview */}
-                  {(settings.favicon_url || settings.favicon_dark_url) && (
+                  {(settings.faviconUrl || settings.faviconDarkUrl) && (
                     <div className="mt-4 border-t border-gray-200 dark:border-slate-700 pt-4">
                       <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                         Favicon Preview
                       </h4>
                       <div className="grid grid-cols-2 gap-4">
-                        {settings.favicon_url && (
+                        {settings.faviconUrl && (
                           <div className="bg-white dark:bg-slate-700 p-4 rounded-lg border border-gray-200 dark:border-slate-600">
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Light Mode</p>
                             <div className="flex items-center gap-3">
                               <img
-                                src={settings.favicon_url}
+                                src={settings.faviconUrl}
                                 alt="Favicon (Light)"
                                 className="w-8 h-8 border border-gray-300 dark:border-slate-500 rounded"
                                 onError={(e) => {
@@ -1259,17 +1259,17 @@ export const SiteSettings: React.FC = () => {
                                 }}
                               />
                               <code className="text-xs text-gray-600 dark:text-gray-300 break-all">
-                                {settings.favicon_url}
+                                {settings.faviconUrl}
                               </code>
                             </div>
                           </div>
                         )}
-                        {settings.favicon_dark_url && (
+                        {settings.faviconDarkUrl && (
                           <div className="bg-slate-900 p-4 rounded-lg border border-slate-700">
                             <p className="text-xs text-gray-400 mb-2">Dark Mode</p>
                             <div className="flex items-center gap-3">
                               <img
-                                src={settings.favicon_dark_url}
+                                src={settings.faviconDarkUrl}
                                 alt="Favicon (Dark)"
                                 className="w-8 h-8 border border-slate-500 rounded"
                                 onError={(e) => {
@@ -1277,7 +1277,7 @@ export const SiteSettings: React.FC = () => {
                                 }}
                               />
                               <code className="text-xs text-gray-300 break-all">
-                                {settings.favicon_dark_url}
+                                {settings.faviconDarkUrl}
                               </code>
                             </div>
                           </div>
@@ -1299,16 +1299,16 @@ export const SiteSettings: React.FC = () => {
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleChange('show_powered_by', !settings.show_powered_by)}
+                      onClick={() => handleChange('showPoweredBy', !settings.showPoweredBy)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.show_powered_by
+                        settings.showPoweredBy
                           ? 'bg-blue-600 dark:bg-blue-700'
                           : 'bg-gray-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.show_powered_by ? 'translate-x-6' : 'translate-x-1'
+                          settings.showPoweredBy ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -1330,8 +1330,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={settings.twitter_handle}
-                    onChange={(e) => handleChange('twitter_handle', e.target.value)}
+                    value={settings.twitterHandle}
+                    onChange={(e) => handleChange('twitterHandle', e.target.value)}
                     placeholder="@yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1343,8 +1343,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="url"
-                    value={settings.facebook_url}
-                    onChange={(e) => handleChange('facebook_url', e.target.value)}
+                    value={settings.facebookUrl}
+                    onChange={(e) => handleChange('facebookUrl', e.target.value)}
                     placeholder="https://facebook.com/yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1356,8 +1356,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="url"
-                    value={settings.linkedin_url}
-                    onChange={(e) => handleChange('linkedin_url', e.target.value)}
+                    value={settings.linkedinUrl}
+                    onChange={(e) => handleChange('linkedinUrl', e.target.value)}
                     placeholder="https://linkedin.com/company/yourblog"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1369,8 +1369,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="url"
-                    value={settings.github_url}
-                    onChange={(e) => handleChange('github_url', e.target.value)}
+                    value={settings.githubUrl}
+                    onChange={(e) => handleChange('githubUrl', e.target.value)}
                     placeholder="https://github.com/yourusername"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1391,8 +1391,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="email"
-                    value={settings.contact_email}
-                    onChange={(e) => handleChange('contact_email', e.target.value)}
+                    value={settings.contactEmail}
+                    onChange={(e) => handleChange('contactEmail', e.target.value)}
                     placeholder="contact@yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1404,8 +1404,8 @@ export const SiteSettings: React.FC = () => {
                   </label>
                   <input
                     type="email"
-                    value={settings.support_email}
-                    onChange={(e) => handleChange('support_email', e.target.value)}
+                    value={settings.supportEmail}
+                    onChange={(e) => handleChange('supportEmail', e.target.value)}
                     placeholder="support@yourdomain.com"
                     className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -1442,16 +1442,16 @@ export const SiteSettings: React.FC = () => {
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleChange('newsletter_enabled', !settings.newsletter_enabled)}
+                      onClick={() => handleChange('newsletterEnabled', !settings.newsletterEnabled)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.newsletter_enabled
+                        settings.newsletterEnabled
                           ? 'bg-blue-600 dark:bg-blue-700'
                           : 'bg-gray-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
                         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.newsletter_enabled ? 'translate-x-6' : 'translate-x-1'
+                          settings.newsletterEnabled ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -1475,8 +1475,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.smtp_host}
-                          onChange={(e) => handleChange('smtp_host', e.target.value)}
+                          value={settings.smtpHost}
+                          onChange={(e) => handleChange('smtpHost', e.target.value)}
                           placeholder="smtp.sendgrid.net"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1487,8 +1487,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="number"
-                          value={settings.smtp_port}
-                          onChange={(e) => handleChange('smtp_port', parseInt(e.target.value) || 587)}
+                          value={settings.smtpPort}
+                          onChange={(e) => handleChange('smtpPort', parseInt(e.target.value) || 587)}
                           placeholder="587"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1502,8 +1502,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.smtp_username}
-                          onChange={(e) => handleChange('smtp_username', e.target.value)}
+                          value={settings.smtpUsername}
+                          onChange={(e) => handleChange('smtpUsername', e.target.value)}
                           placeholder="apikey"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1514,8 +1514,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="password"
-                          value={settings.smtp_password}
-                          onChange={(e) => handleChange('smtp_password', e.target.value)}
+                          value={settings.smtpPassword}
+                          onChange={(e) => handleChange('smtpPassword', e.target.value)}
                           placeholder="••••••••"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1529,8 +1529,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="email"
-                          value={settings.smtp_from_email}
-                          onChange={(e) => handleChange('smtp_from_email', e.target.value)}
+                          value={settings.smtpFromEmail}
+                          onChange={(e) => handleChange('smtpFromEmail', e.target.value)}
                           placeholder="newsletter@yourdomain.com"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1541,8 +1541,8 @@ export const SiteSettings: React.FC = () => {
                         </label>
                         <input
                           type="text"
-                          value={settings.smtp_from_name}
-                          onChange={(e) => handleChange('smtp_from_name', e.target.value)}
+                          value={settings.smtpFromName}
+                          onChange={(e) => handleChange('smtpFromName', e.target.value)}
                           placeholder="Your Blog Name"
                           className="w-full px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
@@ -1560,16 +1560,16 @@ export const SiteSettings: React.FC = () => {
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleChange('smtp_use_tls', !settings.smtp_use_tls)}
+                        onClick={() => handleChange('smtpUseTls', !settings.smtpUseTls)}
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                          settings.smtp_use_tls
+                          settings.smtpUseTls
                             ? 'bg-blue-600 dark:bg-blue-700'
                             : 'bg-gray-300 dark:bg-slate-600'
                         }`}
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                            settings.smtp_use_tls ? 'translate-x-6' : 'translate-x-1'
+                            settings.smtpUseTls ? 'translate-x-6' : 'translate-x-1'
                           }`}
                         />
                       </button>
