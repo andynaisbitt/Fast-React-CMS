@@ -32,7 +32,7 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const PORT = process.env.SSR_PORT || 3001;
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8100';
 const SITE_URL = process.env.SITE_URL || 'https://theitapprentice.com';
 const DIST_PATH = path.join(__dirname, 'dist');
 const INDEX_HTML_PATH = path.join(DIST_PATH, 'index.html');

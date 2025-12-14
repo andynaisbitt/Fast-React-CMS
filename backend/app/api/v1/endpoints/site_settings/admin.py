@@ -45,8 +45,8 @@ def update_site_settings(
         settings = SiteSettings(id=1)
         db.add(settings)
 
-    # Update fields
-    update_data = settings_data.model_dump(exclude_unset=True)
+    # Update fields - use by_alias=False to get snake_case field names for SQLAlchemy
+    update_data = settings_data.model_dump(by_alias=False, exclude_unset=True)
     for field, value in update_data.items():
         setattr(settings, field, value)
 
