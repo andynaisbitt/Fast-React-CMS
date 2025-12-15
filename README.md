@@ -290,7 +290,7 @@ Frontend will be running at: `http://localhost:5173`
 
 ## Project Structure
 
-> **Note:** Directories `Backend/` and `Frontend/` are being renamed to lowercase (`backend/`, `frontend/`) to follow OSS conventions. Use `rename-dirs.sh` for safe migration.
+> **Note:** Current directory names use capital letters (`Backend/`, `Frontend/`). These will be migrated to lowercase (`backend/`, `frontend/`) in a future update to follow OSS conventions.
 
 ```
 FastReactCMS/
@@ -337,9 +337,8 @@ FastReactCMS/
 │   ├── features/             # Feature documentation
 │   ├── releases/             # Release notes
 │   ├── setup/                # Analytics, AdSense setup
+│   ├── ARCHITECTURE.md       # System architecture guide (v1.5)
 │   └── README.md             # Documentation index
-├── ARCHITECTURE.md           # System architecture guide (v1.5)
-├── rename-dirs.sh            # Directory rename helper script (v1.5)
 ├── .gitignore                # Git exclusions
 ├── LICENSE                   # MIT License
 └── README.md                 # This file
@@ -627,7 +626,7 @@ We take all security reports seriously and will respond promptly.
   - Browser cache handling best practices documented
   - Battle-tested with 48-hour production incident and full recovery
 - ✅ **OSS Standards**
-  - Directory rename script for lowercase conventions (`Backend/` → `backend/`, `Frontend/` → `frontend/`)
+  - Prepared for directory rename to lowercase conventions (`Backend/` → `backend/`, `Frontend/` → `frontend/`)
   - Cleaned documentation structure (essential docs only, no "AI slop")
   - Professional README and contribution guidelines
 
@@ -795,7 +794,7 @@ FastReactCMS is built with amazing open-source technologies:
 FastReactCMS includes comprehensive documentation for developers and contributors:
 
 ### Core Documentation
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Complete system architecture guide (v1.5)
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Complete system architecture guide (v1.5)
   - System overview and design patterns
   - Tech stack breakdown with justifications
   - Security architecture and best practices
@@ -816,7 +815,7 @@ FastReactCMS includes comprehensive documentation for developers and contributor
 
 ## Support
 
-- **Documentation**: Check [ARCHITECTURE.md](ARCHITECTURE.md), this README, and the [docs/](docs/) folder
+- **Documentation**: Check [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), this README, and the [docs/](docs/) folder
 - **API Docs**: Interactive docs at `/docs` when running the backend
 - **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/andynaisbitt/Fast-React-CMS/issues)
 - **Discussions**: Ask questions and share ideas on [GitHub Discussions](https://github.com/andynaisbitt/Fast-React-CMS/discussions)
