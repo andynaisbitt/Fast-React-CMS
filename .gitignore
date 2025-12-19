@@ -74,4 +74,14 @@ PERSONAL_*.md
 *_PRIVATE.md
 STRATEGY_*.md
 
-nul
+# Security test outputs and reports (local only)
+tests/security/reports/
+*_output.txt
+*_report_*.json
+security_report_*.json
+*vulnerabilities*.json
+
+# Release drafts (local only - until published)
+BLOG_POST_*.md
+LINKEDIN_POST_*.md
+DEPLOY_*.md
